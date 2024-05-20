@@ -1,22 +1,25 @@
 package model.entities;
 
-public class Doacao {
+public class Doacao implements Serializable {
 
-    private int id;
+    private static final long serialVersionUID = 1L;
+
+    // Inicialização das variaveis
+    private Integer id;
     private String nome;
     private String tipo;
-    private char genero;
-    private char tamanho;
+    private Char genero;
+    private Char tamanho;
 
-    // Construtor sem passagem de parâmetros
+    // Construtor sem passagem de parâmetro
     public Doacao() {
-
+        super();
     }
 
-    // Construtor com passagem de parâmetros
+    // Construtor com passagem de parâmetro
 
 
-    public Doacao(int id, String nome, String tipo, char genero, char tamanho) {
+    public Doacao(Integer id, String nome, String tipo, Char genero, Char tamanho) {
         this.id = id;
         this.nome = nome;
         this.tipo = tipo;
@@ -24,12 +27,13 @@ public class Doacao {
         this.tamanho = tamanho;
     }
 
-    // Criação dos Getters & Setters
-    public int getId() {
+    // Getters & Setters
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -49,38 +53,40 @@ public class Doacao {
         this.tipo = tipo;
     }
 
-    public char getGenero() {
+    public Char getGenero() {
         return genero;
     }
 
-    public void setGenero(char genero) {
+    public void setGenero(Char genero) {
         this.genero = genero;
     }
 
-    public char getTamanho() {
+    public Char getTamanho() {
         return tamanho;
     }
 
-    public void setTamanho(char tamanho) {
+    public void setTamanho(Char tamanho) {
         this.tamanho = tamanho;
     }
 
+    // método toString
     @java.lang.Override
     public java.lang.String toString() {
-        return "Itens: " +
+        return "Itens" +
+                "Id: " + id +
                 "Nome: " + nome +
                 "Tipo: " + tipo +
                 "Genero: " + genero +
                 "Tamanho: " + tamanho;
     }
 
-    // Criação toHashCode
+    // Criação do Equals and HashCode
     public boolean equals(Object object) {
         if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (!(object instanceof Doacao)) return false;
         if (!super.equals(object)) return false;
         Doacao doacao = (Doacao) object;
-        return id == doacao.id;
+        return java.util.Objects.equals(id, doacao.id);
     }
 
     public int hashCode() {
