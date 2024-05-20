@@ -1,25 +1,27 @@
 package model.entities;
 
+import java.io.Serializable;
+import java.util.Objects;
+
 public class Doacao implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    // Inicialização das variaveis
+    //Inicialização das variaveis
     private Integer id;
     private String nome;
     private String tipo;
-    private Char genero;
-    private Char tamanho;
+    private char genero;
+    private char tamanho;
 
-    // Construtor sem passagem de parâmetro
+    //Construtor sem passagem de parâmetro
     public Doacao() {
         super();
     }
 
     // Construtor com passagem de parâmetro
 
-
-    public Doacao(Integer id, String nome, String tipo, Char genero, Char tamanho) {
+    public Doacao(Integer id, String nome, String tipo, char genero, char tamanho) {
         this.id = id;
         this.nome = nome;
         this.tipo = tipo;
@@ -28,7 +30,6 @@ public class Doacao implements Serializable {
     }
 
     // Getters & Setters
-
     public Integer getId() {
         return id;
     }
@@ -53,23 +54,23 @@ public class Doacao implements Serializable {
         this.tipo = tipo;
     }
 
-    public Char getGenero() {
+    public char getGenero() {
         return genero;
     }
 
-    public void setGenero(Char genero) {
+    public void setGenero(char genero) {
         this.genero = genero;
     }
 
-    public Char getTamanho() {
+    public char getTamanho() {
         return tamanho;
     }
 
-    public void setTamanho(Char tamanho) {
+    public void setTamanho(char tamanho) {
         this.tamanho = tamanho;
     }
 
-    // método toString
+    //método toString
     @java.lang.Override
     public java.lang.String toString() {
         return "Itens" +
@@ -80,7 +81,7 @@ public class Doacao implements Serializable {
                 "Tamanho: " + tamanho;
     }
 
-    // Criação do Equals and HashCode
+    //Criação do Equals and HashCode
     public boolean equals(Object object) {
         if (this == object) return true;
         if (!(object instanceof Doacao)) return false;
