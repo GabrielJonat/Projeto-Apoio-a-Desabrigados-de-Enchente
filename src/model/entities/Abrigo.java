@@ -83,6 +83,16 @@ public class Abrigo {
 	public void setOcupacao(double ocupacao) {
 		this.ocupacao = ocupacao;
 	}
+	
+	
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	@Override
 	public int hashCode() {
