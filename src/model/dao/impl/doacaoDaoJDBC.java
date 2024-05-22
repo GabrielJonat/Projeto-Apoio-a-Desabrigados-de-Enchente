@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import db.DB;
@@ -16,6 +17,7 @@ public class doacaoDaoJDBC implements doacaoDao {
 	
 	private Connection conn;
 	
+	// FORÇAR A INJEÇÃO DE DEPÊNDENCIAS DENTRO DA CONEXÃO
 	public doacaoDaoJDBC(Connection conn) {
 		this.conn = conn;
 	}
@@ -48,7 +50,7 @@ public class doacaoDaoJDBC implements doacaoDao {
 				DB.closeResultSet(rs);
 			}
 			else {
-				throw new DbException("Unexpected error! No rows affected!");
+				throw new DbException("Erro inesperado! nenhuma linha foi alterada!");
 			}
 		}
 		catch(SQLException e) {
@@ -60,29 +62,142 @@ public class doacaoDaoJDBC implements doacaoDao {
 		
 	}
 
+	//ATUALIZAÇÃO DE DADOS
 	@Override
-	public void update(Doacao obj) {
-		// TODO Auto-generated method stub
+	public void update(Integer id, String nome) {
 		
+		PreparedStatement st = null;
+		
+		try {
+			st = conn.prepareStatement(
+					
+					"UPDATE item "
+					+ "SET nome = ? "
+					+ "WHERE id = ? ");
+			
+			st.setString(1, nome);
+			st.setInt(2, id);
+
+			int rowsAffected = st.executeUpdate();
+			
+		}
+		catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeStatement(st);
+		}
 	}
 
+	// DELETE BY ID
 	@Override
 	public void deleteById(Integer id) {
-		// TODO Auto-generated method stub
+	
+		PreparedStatement st = null;
+		ResultSet rs = null;
 		
+		try {
+			st = conn.prepareStatement(
+					"DELETE "
+					+"FROM item "
+					+"WHERE id = ? ");
+			
+			st.setInt(1, id);
+			st.executeUpdate();
+			
+			int rowsAffected = st.executeUpdate();
+			
+		}
+		catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeStatement(st);
+		}
 	}
+	
 
+	// Encontrar por ID
 	@Override
-	public Doacao findById(Integer id) {
-		// TODO Auto-generated method stub
+	public Doacao findById(Integer id ) {
+
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			st = conn.prepareStatement(
+					"SELECT * "
+					+"FROM item "
+					+"WHERE id = ? ");
+			
+			st.setInt(1, id);
+			rs = st.executeQuery();
+			
+			if(rs.next()) {
+				
+				Doacao doacao = new Doacao();
+				
+				doacao.setId(rs.getInt("id"));
+				doacao.setNome(rs.getString("nome"));
+				doacao.setTipo(rs.getString("tipo"));
+				doacao.setGenero(rs.getString("genero"));
+				doacao.setTamanho(rs.getString("tamanho"));
+				
+				return doacao;
+			}
+			
+			int rowsAffected = st.executeUpdate();
+		}
+		catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			
+			DB.closeStatement(st);
+		}
 		return null;
 	}
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public List findAll() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Doacao> findAll() {
+		
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			st = conn.prepareStatement(
+					"SELECT * "
+					+"FROM item "
+					+"ORDER BY ID");
+		
+			rs = st.executeQuery();
+			List<Doacao> doacoes =new ArrayList();  
+			
+			while(rs.next()) {
+				
+				Doacao doacao = new Doacao();
+				
+				doacao.setNome(rs.getString("nome"));
+				doacao.setTipo(rs.getString("tipo"));
+				doacao.setGenero(rs.getString("genero"));
+				doacao.setTamanho(rs.getString("tamanho"));
+							
+				doacoes.add(doacao);
+				
+			}
+			
+			return doacoes;
+
+		}
+		catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		
+		finally {
+			DB.closeStatement(st);
+		}
+
 	}
 
 	@SuppressWarnings("rawtypes")

@@ -79,11 +79,11 @@ public class Doacao implements Serializable {
     @java.lang.Override
     public java.lang.String toString() {
         return "Itens" +
-                "Id: " + id +
-                "Nome: " + nome +
-                "Tipo: " + tipo +
-                "Genero: " + genero +
-                "Tamanho: " + tamanho;
+                " Id: " + id +
+                " Nome: " + nome +
+                " Tipo: " + tipo +
+                " Genero: " + genero +
+                " Tamanho: " + tamanho;
     }
 
     //Criação do Equals and HashCode
