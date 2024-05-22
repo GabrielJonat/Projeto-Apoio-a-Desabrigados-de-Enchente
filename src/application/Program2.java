@@ -21,7 +21,9 @@ public class Program2 {
 		int escolha = 1;
 		
 		while (escolha != 0) {
-			
+		
+		clear();
+		
 		menu();
 		
 		escolha = sc.nextInt();
@@ -242,9 +244,9 @@ public class Program2 {
 	
 	public static void clear() {
 		
-		System.out.print("\033[H\033[2J");
-		System.out.flush();
-	
+		for(int i = 0; i < 50; i++)
+			System.out.println();
+		
 	}
 
 }
