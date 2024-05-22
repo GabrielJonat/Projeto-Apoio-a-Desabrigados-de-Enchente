@@ -29,6 +29,8 @@ public class Program2 {
 		switch(escolha) {
 		
 		case 1:
+
+			clear();
 			
 			listarAbrigos(sc, abrigoDao);
 			
@@ -39,6 +41,8 @@ public class Program2 {
 			
 		case 2:
 			
+			clear();
+			
 			pesquisarAbrigoPorId(sc, abrigoDao);
 			
 			for(int i = 0; i < 2; i++)
@@ -47,6 +51,8 @@ public class Program2 {
 			break;
 			
 		case 3:
+			
+			clear();
 			
 			adicionarAbrigo(sc, abrigoDao);
 			
@@ -57,6 +63,8 @@ public class Program2 {
 			
 		case 4: 
 			
+			clear();
+			
 			atualizarAbrigo(sc, abrigoDao, new Abrigo());
 			
 			for(int i = 0; i < 2; i++)
@@ -65,6 +73,8 @@ public class Program2 {
 			break;
 			
 		case 5:
+			
+			clear();
 			
 			deletarAbrigo(sc, abrigoDao);
 			
@@ -124,9 +134,9 @@ public class Program2 {
 
 				System.out.print("Insira o numero da ocupação: ");
 				
-				Double numeroOcupacao= sc.nextDouble();
+				Integer numeroOcupacao= sc.nextInt();
 				
-				Abrigo newAbrigo = new Abrigo(null, nome, responsavel , logradouro ,numero, telefone, email, null);
+				Abrigo newAbrigo = new Abrigo(null, nome, responsavel , logradouro ,numero, telefone, email, numeroOcupacao);
 				
 				System.out.println();
 				
@@ -151,6 +161,8 @@ public class Program2 {
 	}
 
 	public static void listarAbrigos(Scanner sc, AbrigoDao abrigoDao) {
+		
+		clear();
 		
 		System.out.println("\n=== TEST 1: abrigo findAll =====\n");
 		
@@ -227,4 +239,12 @@ public class Program2 {
 		
 		System.out.println("5 - Deletar Abrigo");
 	}
+	
+	public static void clear() {
+		
+		System.out.print("\033[H\033[2J");
+		System.out.flush();
+	
+	}
+
 }

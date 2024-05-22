@@ -10,7 +10,7 @@ public class Abrigo {
 	private String telefone;
 	private String email;
 	private Integer capacidade = 200;
-	private Integer ocupacao = 200;
+	private Double ocupacao = null;
 	private Integer numOcupacao;
 	
 	public Abrigo() {}
@@ -25,20 +25,9 @@ public class Abrigo {
 		this.numero = numero;
 		this.email = email;
 		this.numOcupacao = numOcupacao;
-		//this.capacidade = numOcupacao / this.ocupacao * 100;
-
+		this.ocupacao = null;
+		
 	}
-	
-	
-
-
-	public Abrigo(Integer id2, String nome2, String responsavel2, String logradouro2, Integer numero2, String telefone2,
-			String email2, int numOcupacao2) {
-		// TODO Auto-generated constructor stub
-	}
-
-
-
 
 	public String getResponsavel() {
 		return responsavel;
@@ -75,10 +64,12 @@ public class Abrigo {
 	public double getOcupacao() {
 		return ocupacao;
 	}
-
-	public void setOcupacao(Integer ocupacao) {
+	
+	public void setOcupacao(Double ocupacao) {
+		
 		this.ocupacao = ocupacao;
-	}	
+	}
+
 	
 
 	public String getNome() {
@@ -125,9 +116,9 @@ public class Abrigo {
 
 	@Override
 	public String toString() {
-		return "Abrigo [nome= " + nome + ", responsavel= " + responsavel
+		return "Abrigo [id= " + id + ", nome= " + nome + ", responsavel= " + responsavel
 				+ ", telefone= " + telefone + ", email= " + email + ", capacidade= " + capacidade + ", ocupacao= "
-				+ ocupacao + "]";
+				+ ocupacao + "%]";
 	}
 	
 	

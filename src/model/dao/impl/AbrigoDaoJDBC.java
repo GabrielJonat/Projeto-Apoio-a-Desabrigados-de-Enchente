@@ -75,6 +75,8 @@ public class AbrigoDaoJDBC implements AbrigoDao {
 				obj.setTelefone(rs.getString("telefone"));
 				obj.setEmail(rs.getString("email"));
 				obj.setNome(rs.getString("nome"));
+				obj.setOcupacao(rs.getDouble("ocupacao"));
+				
 				list.add(obj);
 			}
 			return list;
@@ -94,7 +96,7 @@ public class AbrigoDaoJDBC implements AbrigoDao {
 		try {
 			st = conn.prepareStatement(
 				"INSERT INTO abrigo " +
-				"( responsavel, logradouro, numero, telefone, email, capacidade, ocupacao, nome) " + 
+				"( responsavel, logradouro, numero, telefone, email, capacidade, numOcupacao, nome) " + 
 				"VALUES " +
 				"(?,?,?,?,?,?,?,?)" 
 				, Statement.RETURN_GENERATED_KEYS);
@@ -111,7 +113,7 @@ public class AbrigoDaoJDBC implements AbrigoDao {
 			
 			st.setDouble(6, obj.getCapacidade());
 			
-			st.setDouble(7, obj.getOcupacao());
+			st.setDouble(7, obj.getNumOcupacao());
 			
 			st.setString(8, obj.getNome());
 
