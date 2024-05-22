@@ -1,6 +1,7 @@
 package model.entities;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Objects;
 
 public class Doacao implements Serializable {
@@ -11,30 +12,34 @@ public class Doacao implements Serializable {
     private Integer id;
     private String nome;
     private String tipo;
-    private char genero;
-    private char tamanho;
-
+    private String genero;
+    private String tamanho;
+    
+    
     //Construtor sem passagem de parâmetro
     public Doacao() {
         super();
     }
 
     // Construtor com passagem de parâmetro
+    public Doacao(Integer id, String nome, String tipo, String genero, String tamanho) {
+    	
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.tipo = tipo;
+		this.genero = genero;
+		this.tamanho = tamanho;
+	}
 
-    public Doacao(Integer id, String nome, String tipo, char genero, char tamanho) {
-        this.id = id;
-        this.nome = nome;
-        this.tipo = tipo;
-        this.genero = genero;
-        this.tamanho = tamanho;
-    }
 
     // Getters & Setters
     public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+
+	public void setId(Integer id) {
         this.id = id;
     }
 
@@ -54,23 +59,23 @@ public class Doacao implements Serializable {
         this.tipo = tipo;
     }
 
-    public char getGenero() {
+    public String getGenero() {
         return genero;
     }
 
-    public void setGenero(char genero) {
+    public void setGenero(String genero) {
         this.genero = genero;
     }
 
-    public char getTamanho() {
+    public String getTamanho() {
         return tamanho;
     }
 
-    public void setTamanho(char tamanho) {
+    public void setTamanho(String tamanho) {
         this.tamanho = tamanho;
     }
-
-    //método toString
+    
+	//método toString
     @java.lang.Override
     public java.lang.String toString() {
         return "Itens" +
