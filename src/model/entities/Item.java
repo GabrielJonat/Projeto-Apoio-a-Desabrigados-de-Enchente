@@ -3,7 +3,7 @@ package model.entities;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Doacao implements Serializable {
+public class Item implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -11,17 +11,17 @@ public class Doacao implements Serializable {
     private Integer id;
     private String nome;
     private String tipo;
-    private char genero;
-    private char tamanho;
+    private String genero;
+    private String tamanho;
 
     //Construtor sem passagem de parâmetro
-    public Doacao() {
+    public Item() {
         super();
     }
 
     // Construtor com passagem de parâmetro
 
-    public Doacao(Integer id, String nome, String tipo, char genero, char tamanho) {
+    public Item(Integer id, String nome, String tipo, String genero, String tamanho) {
         this.id = id;
         this.nome = nome;
         this.tipo = tipo;
@@ -54,19 +54,19 @@ public class Doacao implements Serializable {
         this.tipo = tipo;
     }
 
-    public char getGenero() {
+    public String getGenero() {
         return genero;
     }
 
-    public void setGenero(char genero) {
+    public void setGenero(String genero) {
         this.genero = genero;
     }
 
-    public char getTamanho() {
+    public String getTamanho() {
         return tamanho;
     }
 
-    public void setTamanho(char tamanho) {
+    public void setTamanho(String tamanho) {
         this.tamanho = tamanho;
     }
 
@@ -84,9 +84,9 @@ public class Doacao implements Serializable {
     //Criação do Equals and HashCode
     public boolean equals(Object object) {
         if (this == object) return true;
-        if (!(object instanceof Doacao)) return false;
+        if (!(object instanceof Item)) return false;
         if (!super.equals(object)) return false;
-        Doacao doacao = (Doacao) object;
+        Item doacao = (Item) object;
         return java.util.Objects.equals(id, doacao.id);
     }
 
