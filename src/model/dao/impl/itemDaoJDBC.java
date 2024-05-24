@@ -157,6 +157,94 @@ public class itemDaoJDBC implements itemDao {
 		}
 		return null;
 	}
+	
+	// Encontrar por nome
+	@Override
+	public List<Item> findByName(String nome) {
+
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			st = conn.prepareStatement(
+					"SELECT * "
+					+"FROM item "
+					+"WHERE nome = ? ");
+			
+			st.setString(1, nome);
+			rs = st.executeQuery();
+			List<Item> doacoes = new ArrayList();
+			
+			while(rs.next()) {
+				
+				Item doacao = new Item();
+				
+				doacao.setId(rs.getInt("id"));
+				doacao.setNome(rs.getString("nome"));
+				doacao.setTipo(rs.getString("tipo"));
+				doacao.setGenero(rs.getString("genero"));
+				doacao.setTamanho(rs.getString("tamanho"));
+				
+				doacoes.add(doacao);
+			}
+
+			
+			return doacoes;
+			
+		}
+		catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			
+			DB.closeStatement(st);
+		}
+	}
+	
+	// Encontrar por nome
+	@Override
+	public List<Item> findByType(String tipo) {
+
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			st = conn.prepareStatement(
+					"SELECT * "
+					+"FROM item "
+					+"WHERE tipo = ? ");
+			
+			st.setString(1, tipo);
+			rs = st.executeQuery();
+			List<Item> doacoes = new ArrayList();
+			
+			while(rs.next()) {
+				
+				Item doacao = new Item();
+				
+				doacao.setId(rs.getInt("id"));
+				doacao.setNome(rs.getString("nome"));
+				doacao.setTipo(rs.getString("tipo"));
+				doacao.setGenero(rs.getString("genero"));
+				doacao.setTamanho(rs.getString("tamanho"));
+				
+				doacoes.add(doacao);
+			}
+
+			
+			return doacoes;
+			
+		}
+		catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			
+			DB.closeStatement(st);
+		}
+	}
+	
+	
 
 	@SuppressWarnings("rawtypes")
 	@Override

@@ -73,12 +73,19 @@ public class Item implements Serializable {
     //método toString
     @java.lang.Override
     public java.lang.String toString() {
-        return "Item" +
-                " Id: " + id +
-                ", Nome: " + nome +
-                ", Tipo: " + tipo +
-                ", Genero: " + genero +
-                ", Tamanho: " + tamanho;
+        StringBuilder sb = new StringBuilder();
+          sb.append(" Id: ").append(id)
+          .append(" - ").append(tipo);
+        
+        if (!tamanho.isEmpty()) {
+            sb.append(", Tamanho: ").append(tamanho);
+        }
+        
+        if (!genero.isEmpty()) {
+            sb.append(", Genero: ").append(genero);
+        }
+        
+        return sb.toString();
     }
 
     //Criação do Equals and HashCode

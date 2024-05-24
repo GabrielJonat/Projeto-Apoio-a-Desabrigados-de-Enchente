@@ -10,6 +10,8 @@ public interface itemDao<CentroDistribuicao> {
 	void update(Integer id, String nome);
 	void deleteById(Integer id);
 	Item findById(Integer id);
+	List<Item> findByName(String tipo);
+	List<Item> findByType(String tipo);
 	List<Item> findAll();
 	List<Item> findBycentroDistribuicao(CentroDistribuicao centroDistribuicao);
 

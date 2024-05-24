@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import model.dao.AbrigoDao;
 import model.dao.DaoFactory;
+import model.dao.EstoqueCentroDao;
 import application.UI.*;
 
 public class Programa {
@@ -13,6 +14,7 @@ public class Programa {
 		Scanner sc = new Scanner(System.in);
 		
 		AbrigoDao abrigoDao = DaoFactory.createSellerDao();
+		EstoqueCentroDao estoqueCentroDao = DaoFactory.createEstoqueCentroDao();
 		
 		
 		int escolha = 1;
@@ -39,7 +41,7 @@ public class Programa {
 				case 2:
 					
 					clear();
-					//Doacoes
+					itemUI.a(sc);
 					break;
 					
 				case 3:
@@ -83,23 +85,23 @@ public class Programa {
 	
 	public static void menu() {
 
-		System.out.println("+-------------------------------+");
-		System.out.println("|                               |");
-		System.out.println("|       CENTRO DE DOAÇÕES       |");
-		System.out.println("|                               |");
-		System.out.println("|           COMPASS.UOL         |");
-		System.out.println("|                               |");
-		System.out.println("|                               |");
-		System.out.println("| Informe a opção desejada:     |");
-		System.out.println("|                               |");
-		System.out.println("|    1 - Abrigos                |");
-		System.out.println("|    2 - Doações                |");
-		System.out.println("|    3 - Ordem de pedido        |");
-		System.out.println("|    4 - Checkout de itens      |");
-		System.out.println("|    5 - Tranferência de doações|");
-		System.out.println("|    6 - Sair do programa       |");
-		System.out.println("|                               |");
-		System.out.println("+-------------------------------+");
+		System.out.println("+-----------------------------------+");
+		System.out.println("|                                   |");
+		System.out.println("|          CENTRO DE DOAÇÕES        |");
+		System.out.println("|                                   |");
+		System.out.println("|            COMPASS.UOL            |");
+		System.out.println("|                                   |");
+		System.out.println("|                                   |");
+		System.out.println("|  Informe a opção desejada:        |");
+		System.out.println("|                                   |");
+		System.out.println("|     1 - Abrigos                   |");
+		System.out.println("|     2 - Doações                   |");
+		System.out.println("|     3 - Ordem de pedido           |");
+		System.out.println("|     4 - Checkout de itens         |");
+		System.out.println("|     5 - Tranferência de doações   |");
+		System.out.println("|     6 - Sair do programa          |");
+		System.out.println("|                                   |");
+		System.out.println("+-----------------------------------+");
 		System.out.print("\nDigite sua opção: ");
 	}
 	

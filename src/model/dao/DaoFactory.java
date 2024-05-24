@@ -3,6 +3,7 @@ package model.dao;
 import db.DB;
 import model.dao.impl.AbrigoDaoJDBC;
 import model.dao.impl.EstoqueCentroJDBC;
+import model.dao.impl.CentroDaoJDBC;
 import model.dao.impl.itemDaoJDBC;
 
 public class DaoFactory {
@@ -20,6 +21,11 @@ public class DaoFactory {
 	public static itemDao createItemDao() {
 		
 		return new itemDaoJDBC(DB.getConnection());
+	}
+	
+	public static CentroDao createCentroDao() {
+		
+		return new CentroDaoJDBC(DB.getConnection());
 	}
 	
 }
