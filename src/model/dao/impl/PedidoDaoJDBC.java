@@ -1,0 +1,183 @@
+package model.dao.impl;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import db.DB;
+import db.DbException;
+import model.dao.PedidoDao;
+import model.entities.Item;
+import model.entities.Pedido;
+
+public class PedidoDaoJDBC implements PedidoDao{
+
+	private Connection conn;
+	
+	// FORÇAR A INJEÇÃO DE DEPÊNDENCIAS DENTRO DA CONEXÃO
+		
+		
+		public PedidoDaoJDBC(Connection conn) {
+		this.conn = conn;
+	    }
+
+
+		@Override
+		public void insert(Pedido obj) {
+		    PreparedStatement st = null;
+		    try {
+		        st = conn.prepareStatement(
+		            "INSERT INTO pedido "
+		            + "(id_abrigo, id_centro, dataPedido, dataEntrega) "
+		            + "VALUES "
+		            + "(?, ?, ?, ?)",
+		            Statement.RETURN_GENERATED_KEYS);
+
+		        st.setInt(1, obj.getId_abrigo());
+		        st.setInt(2, obj.getId_centro());
+		        st.setDate(3, java.sql.Date.valueOf(obj.getDataPedido()));
+		        st.setDate(4, java.sql.Date.valueOf(obj.getDataEntrega()));
+
+		        int rowsAffected = st.executeUpdate();
+
+		        if (rowsAffected > 0) {
+		            ResultSet rs = st.getGeneratedKeys();
+		            if (rs.next()) {
+		                int id = rs.getInt(1);
+		                obj.setId(id);
+		            }
+		            DB.closeResultSet(rs);
+		        } else {
+		            throw new DbException("Erro inesperado! Nenhuma linha foi alterada!");
+		        }
+		    } catch (SQLException e) {
+		        throw new DbException(e.getMessage());
+		    } finally {
+		        DB.closeStatement(st);
+		    }
+		}
+
+
+		@Override
+		public void update(Integer id, String nome) {
+		    PreparedStatement st = null;
+		    try {
+		        st = conn.prepareStatement(
+		            "UPDATE pedido "
+		            + "SET nome = ? "
+		            + "WHERE id = ?");
+
+		        st.setString(1, nome);
+		        st.setInt(2, id);
+
+		        int rowsAffected = st.executeUpdate();
+
+		        if (rowsAffected == 0) {
+		            throw new DbException("Erro inesperado! Nenhuma linha foi alterada!");
+		        }
+		    } catch (SQLException e) {
+		        throw new DbException(e.getMessage());
+		    } finally {
+		        DB.closeStatement(st);
+		    }
+		}
+
+
+		@Override
+		public void deleteById(Integer id) {
+		    PreparedStatement st = null;
+		    try {
+		        st = conn.prepareStatement(
+		            "DELETE FROM pedido WHERE id = ?");
+
+		        st.setInt(1, id);
+
+		        int rowsAffected = st.executeUpdate();
+
+		        if (rowsAffected == 0) {
+		            throw new DbException("Erro inesperado! Nenhuma linha foi deletada!");
+		        }
+		    } catch (SQLException e) {
+		        throw new DbException(e.getMessage());
+		    } finally {
+		        DB.closeStatement(st);
+		    }
+		}
+
+
+		@Override
+		public Pedido findById(Integer id) {
+		    PreparedStatement st = null;
+		    ResultSet rs = null;
+		    try {
+		        st = conn.prepareStatement(
+		            "SELECT * FROM pedido WHERE id = ?");
+
+		        st.setInt(1, id);
+		        rs = st.executeQuery();
+
+		        if (rs.next()) {
+		            Pedido obj = new Pedido();
+		            obj.setId(rs.getInt("id"));
+		            obj.setId_abrigo(rs.getInt("id_abrigo"));
+		            obj.setId_centro(rs.getInt("id_centro"));
+		            obj.setDataPedido(rs.getDate("dataPedido").toLocalDate());
+		            obj.setDataEntrega(rs.getDate("dataEntrega").toLocalDate());
+		      
+		            return obj;
+		        }
+		        return null; 
+		    } catch (SQLException e) {
+		        throw new DbException(e.getMessage());
+		    } finally {
+		        DB.closeResultSet(rs);
+		        DB.closeStatement(st);
+		    }
+		}
+
+
+		@Override
+		public List<Pedido> findAll() {
+		    PreparedStatement st = null;
+		    ResultSet rs = null;
+		    try {
+		        st = conn.prepareStatement("SELECT * FROM pedido WHERE idCentro =?");
+		        rs = st.executeQuery();
+
+		        List<Pedido> list = new ArrayList<>();
+
+		        while (rs.next()) {
+		            Pedido obj = new Pedido();
+		            obj.setId(rs.getInt("id"));
+		            obj.setId_abrigo(rs.getInt("id_abrigo"));
+		            obj.setId_centro(rs.getInt("id_centro"));
+		            obj.setDataPedido(rs.getDate("dataPedido").toLocalDate());
+		            obj.setDataEntrega(rs.getDate("dataEntrega").toLocalDate());
+		    
+		            list.add(obj);
+		        }
+
+		        return list;
+		    } catch (SQLException e) {
+		        throw new DbException(e.getMessage());
+		    } finally {
+		        DB.closeResultSet(rs);
+		        DB.closeStatement(st);
+		    }
+		}
+
+
+		@Override
+		public List<Item> listItem(Item item) {
+			List<Item> list = new ArrayList();
+			list.add(item);
+			
+			return list;
+		}
+
+
+}
