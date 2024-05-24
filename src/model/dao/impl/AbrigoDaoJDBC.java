@@ -34,9 +34,17 @@ public class AbrigoDaoJDBC implements AbrigoDao {
 			if (rs.next()) {
 				Abrigo obj = new Abrigo();
 				obj.setId(rs.getInt("id"));
+				obj.setResponsavel(rs.getString("responsavel"));
+				obj.setLogradouro(rs.getString("logradouro"));
+				obj.setNumero(rs.getInt("numero"));
+				obj.setTelefone(rs.getString("telefone"));
+				obj.setEmail(rs.getString("email"));
 				obj.setNome(rs.getString("nome"));
+				
 				return obj;
+			
 			}
+			
 			return null;
 		}
 		catch (SQLException e) {
@@ -47,7 +55,7 @@ public class AbrigoDaoJDBC implements AbrigoDao {
 			DB.closeResultSet(rs);
 		}
 	}
-
+	
 	public List<Abrigo> findAll() {
 		PreparedStatement st = null;
 		ResultSet rs = null;
@@ -61,7 +69,14 @@ public class AbrigoDaoJDBC implements AbrigoDao {
 			while (rs.next()) {
 				Abrigo obj = new Abrigo();
 				obj.setId(rs.getInt("id"));
+				obj.setResponsavel(rs.getString("responsavel"));
+				obj.setLogradouro(rs.getString("logradouro"));
+				obj.setNumero(rs.getInt("numero"));
+				obj.setTelefone(rs.getString("telefone"));
+				obj.setEmail(rs.getString("email"));
 				obj.setNome(rs.getString("nome"));
+				obj.setOcupacao(rs.getDouble("ocupacao"));
+				
 				list.add(obj);
 			}
 			return list;
@@ -77,23 +92,37 @@ public class AbrigoDaoJDBC implements AbrigoDao {
 
 	public void insert(Abrigo obj) {
 		PreparedStatement st = null;
+		System.out.println(obj);
 		try {
 			st = conn.prepareStatement(
 				"INSERT INTO abrigo " +
-				"(nome) " +
+				"( responsavel, logradouro, numero, telefone, email, capacidade, numOcupacao, nome) " + 
 				"VALUES " +
-				"(?)", 
-				Statement.RETURN_GENERATED_KEYS);
+				"(?,?,?,?,?,?,?,?)" 
+				, Statement.RETURN_GENERATED_KEYS);
 
-			st.setString(1, obj.getNome());
+			st.setString(1, obj.getResponsavel());
+			
+			st.setString(2, obj.getLogradouro());
+			
+			st.setInt(3, obj.getNumero());
+			
+			st.setString(4, obj.getTelefone());
+			
+			st.setString(5, obj.getEmail());
+			
+			st.setDouble(6, obj.getCapacidade());
+			
+			st.setDouble(7, obj.getNumOcupacao());
+			
+			st.setString(8, obj.getNome());
 
 			int rowsAffected = st.executeUpdate();
 			
 			if (rowsAffected > 0) {
 				ResultSet rs = st.getGeneratedKeys();
 				if (rs.next()) {
-					int id = rs.getInt(1);
-					obj.setId(id);
+					
 				}
 			}
 			else {
@@ -113,12 +142,34 @@ public class AbrigoDaoJDBC implements AbrigoDao {
 		try {
 			st = conn.prepareStatement(
 				"UPDATE abrigo " +
-				"SET nome = ? " +
+				"SET responsavel = ?" + 
+				", logradouro = ?" + 
+				", numero = ?" +
+				", telefone = ?" + 
+				", email = ?" + 
+				", capacidade = ? " + 
+				", ocupacao = ?" + 
+				", nome = ?" + 
 				"WHERE id = ?");
-
-			st.setString(1, obj.getNome());
-			st.setInt(2, obj.getId());
-
+			
+			st.setString(1, obj.getResponsavel());
+			
+			st.setString(2, obj.getLogradouro());
+			
+			st.setInt(3, obj.getNumero());
+			
+			st.setString(4, obj.getTelefone());
+			
+			st.setString(5, obj.getEmail());
+			
+			st.setDouble(6, obj.getCapacidade());
+			
+			st.setDouble(7, obj.getOcupacao());
+			
+			st.setString(8, obj.getNome());
+			
+			st.setInt(9, obj.getId());
+			
 			st.executeUpdate();
 		}
 		catch (SQLException e) {
@@ -146,4 +197,5 @@ public class AbrigoDaoJDBC implements AbrigoDao {
 			DB.closeStatement(st);
 		}
 	}
+
 }
