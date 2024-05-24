@@ -10,42 +10,44 @@ import java.util.List;
 
 import db.DB;
 import db.DbException;
-import model.dao.itemDao;
+import model.dao.EstoqueCentroDao;
+import model.entities.EstoqueCentro;
 import model.entities.Item;
 
-public class itemDaoJDBC implements itemDao {
-	
-	private Connection conn;
+public class EstoqueCentroJDBC implements EstoqueCentroDao{
+
+private Connection conn;
 	
 	// FORÇAR A INJEÇÃO DE DEPÊNDENCIAS DENTRO DA CONEXÃO
-	public itemDaoJDBC(Connection conn) {
+	public EstoqueCentroJDBC(Connection conn) {
 		this.conn = conn;
 	}
 
 	// Inserção de dados
 	@Override
-	public void insert(Item obj) {
+	public void insert(EstoqueCentro lote) {
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement(
-					"INSERT INTO item "
-					+ "(nome, tipo, genero, tamanho) "
+					"INSERT INTO estoqueCentro"
+					+ "( idCentro, idItem, quantidade) "
 					+ "VALUES "
-					+ "(?, ?, ?, ?)",
+					+ "( ?, ?, ?)",
 					Statement.RETURN_GENERATED_KEYS);
 			
-			st.setString(1, obj.getNome());
-			st.setString(2, obj.getTipo());
-			st.setString(3, obj.getGenero());
-			st.setString(4, obj.getTamanho());
+			//st.setInt(1, lote.getId());
+			st.setInt(1, lote.getIdCentro());
+			st.setInt(2, lote.getIdtem());
+			st.setInt(3, lote.getQuantidade());
+			
 			
 			int rowsAffected = st.executeUpdate();
 			
 			if (rowsAffected > 0) {
 				ResultSet rs = st.getGeneratedKeys();
 				if (rs.next()) {
-					int id = rs.getInt(1);
-					obj.setId(id);
+					Integer id_inserido = rs.getInt(1);
+					lote.setId(id_inserido);
 				}
 				DB.closeResultSet(rs);
 			}
@@ -62,20 +64,19 @@ public class itemDaoJDBC implements itemDao {
 		
 	}
 
-	//ATUALIZAÇÃO DE DADOS
 	@Override
-	public void update(Integer id, String nome) {
+	public void update(Integer id, Integer quantidade) {
 		
 		PreparedStatement st = null;
 		
 		try {
 			st = conn.prepareStatement(
 					
-					"UPDATE item "
-					+ "SET nome = ? "
-					+ "WHERE id = ? ");
+					"UPDATE estoqueCentro "
+					+ "SET quantidade = ? "
+					+ "WHERE idLote = ? ");
 			
-			st.setString(1, nome);
+			st.setInt(1, quantidade);
 			st.setInt(2, id);
 
 			int rowsAffected = st.executeUpdate();
@@ -99,8 +100,8 @@ public class itemDaoJDBC implements itemDao {
 		try {
 			st = conn.prepareStatement(
 					"DELETE "
-					+"FROM item "
-					+"WHERE id = ? ");
+					+"FROM estoqueCentro"
+					+"WHERE idLote = ? ");
 			
 			st.setInt(1, id);
 			st.executeUpdate();
@@ -119,7 +120,7 @@ public class itemDaoJDBC implements itemDao {
 
 	// Encontrar por ID
 	@Override
-	public Item findById(Integer id ) {
+	public List<EstoqueCentro> findById(Integer id) {
 
 		PreparedStatement st = null;
 		ResultSet rs = null;
@@ -127,26 +128,27 @@ public class itemDaoJDBC implements itemDao {
 		try {
 			st = conn.prepareStatement(
 					"SELECT * "
-					+"FROM item "
-					+"WHERE id = ? ");
+					+"FROM estoqueCentro "
+					+"WHERE idLote = ? ");
 			
 			st.setInt(1, id);
 			rs = st.executeQuery();
 			
-			if(rs.next()) {
+			List<EstoqueCentro> estoque = new ArrayList<>();
+			
+			while(rs.next()) {
 				
-				Item doacao = new Item();
+				EstoqueCentro produto = new EstoqueCentro(rs.getInt("idCentro"), rs.getInt("idItem"), rs.getInt("quantidade"));
 				
-				doacao.setId(rs.getInt("id"));
-				doacao.setNome(rs.getString("nome"));
-				doacao.setTipo(rs.getString("tipo"));
-				doacao.setGenero(rs.getString("genero"));
-				doacao.setTamanho(rs.getString("tamanho"));
+				produto.setId(rs.getInt("idLote"));
 				
-				return doacao;
+				estoque.add(produto);
+			
+				
 			}
 			
-			int rowsAffected = st.executeUpdate();
+			return estoque;
+			
 		}
 		catch(SQLException e) {
 			throw new DbException(e.getMessage());
@@ -155,12 +157,10 @@ public class itemDaoJDBC implements itemDao {
 			
 			DB.closeStatement(st);
 		}
-		return null;
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
-	public List<Item> findAll() {
+	public List<EstoqueCentro> findAll() {
 		
 		PreparedStatement st = null;
 		ResultSet rs = null;
@@ -168,26 +168,26 @@ public class itemDaoJDBC implements itemDao {
 		try {
 			st = conn.prepareStatement(
 					"SELECT * "
-					+"FROM item "
-					+"ORDER BY ID");
+					+"FROM estoqueCentro ");
 		
 			rs = st.executeQuery();
-			List<Item> doacoes =new ArrayList();  
+			
+			List<EstoqueCentro> estoque =new ArrayList();  
 			
 			while(rs.next()) {
 				
-				Item doacao = new Item();
-				doacao.setId(rs.getInt("id"));
-				doacao.setNome(rs.getString("nome"));
-				doacao.setTipo(rs.getString("tipo"));
-				doacao.setGenero(rs.getString("genero"));
-				doacao.setTamanho(rs.getString("tamanho"));
+				EstoqueCentro lote = new EstoqueCentro();
+				
+				lote.setId(rs.getInt("idLote"));
+				lote.setIdCentro(rs.getInt("idCentro"));
+				lote.setIdItem(rs.getInt("idItem"));
+				lote.setQuantidade(rs.getInt("quantidade"));
 							
-				doacoes.add(doacao);
+				estoque.add(lote);
 				
 			}
 			
-			return doacoes;
+			return estoque;
 
 		}
 		catch(SQLException e) {
@@ -200,12 +200,5 @@ public class itemDaoJDBC implements itemDao {
 
 	}
 
-	@SuppressWarnings("rawtypes")
-	@Override
-	public List findBycentroDistribuicao(Object centroDistribuicao) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
-
 }
