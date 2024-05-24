@@ -2,7 +2,6 @@ package model.dao;
 
 import java.util.List;
 
-import model.entities.Item;
 import model.entities.Pedido;
 
 public interface PedidoDao {
@@ -12,5 +11,4 @@ public interface PedidoDao {
 	void deleteById(Integer id);
 	Pedido findById(Integer id);
 	List<Pedido> findAll();
-	List<Item> listItem(Item item);
 }

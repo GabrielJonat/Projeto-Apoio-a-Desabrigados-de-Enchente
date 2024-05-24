@@ -11,7 +11,6 @@ import java.util.List;
 import db.DB;
 import db.DbException;
 import model.dao.PedidoDao;
-import model.entities.Item;
 import model.entities.Pedido;
 
 public class PedidoDaoJDBC implements PedidoDao{
@@ -32,15 +31,13 @@ public class PedidoDaoJDBC implements PedidoDao{
 		    try {
 		        st = conn.prepareStatement(
 		            "INSERT INTO pedido "
-		            + "(id_abrigo, id_centro, dataPedido, dataEntrega) "
+		            + "(id_abrigo, id_centro) "
 		            + "VALUES "
-		            + "(?, ?, ?, ?)",
+		            + "(?, ?)",
 		            Statement.RETURN_GENERATED_KEYS);
 
 		        st.setInt(1, obj.getId_abrigo());
 		        st.setInt(2, obj.getId_centro());
-		        st.setDate(3, java.sql.Date.valueOf(obj.getDataPedido()));
-		        st.setDate(4, java.sql.Date.valueOf(obj.getDataEntrega()));
 
 		        int rowsAffected = st.executeUpdate();
 
@@ -169,15 +166,4 @@ public class PedidoDaoJDBC implements PedidoDao{
 		        DB.closeStatement(st);
 		    }
 		}
-
-
-		@Override
-		public List<Item> listItem(Item item) {
-			List<Item> list = new ArrayList();
-			list.add(item);
-			
-			return list;
-		}
-
-
 }
