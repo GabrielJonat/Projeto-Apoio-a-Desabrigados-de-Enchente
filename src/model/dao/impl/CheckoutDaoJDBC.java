@@ -1,7 +1,5 @@
 package model.dao.impl;
 
-package model.dao.impl;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,7 +22,55 @@ public class CheckoutDaoJDBC implements CheckoutDao{
 	
 	public CheckoutDaoJDBC(Connection conn) {
 		this.conn = conn;
-	}	
+	}		
+	
+	//mostra pedidos daquele centro
+	@Override
+	public List<Pedido> findPedidosByCentroID(Integer idCentro) {
+		
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			st = conn.prepareStatement("SELECT pedido.id as numPedido, centro.nome as centro, abrigo.nome as abrigo, item.nome as item, item.tipo, item.genero, item.tamanho, itempedido.quantidade"
+					+ "FROM checkout "
+					+ "INNER JOIN pedido ON checkout.id_pedido = pedido.id"
+					+ "INNER JOIN itempedido ON pedido.id = itempedido.id_pedido"
+					+ "INNER JOIN item ON itempedido.id_item = item.id"
+					+ "INNER JOIN centro ON pedido.centro_id = centro.id"
+					+ " WHERE pedido.centro_id = ? AND checkout.status_pedido IS NULL"); 
+			
+			st.setInt(1, idCentro);
+			rs = st.executeQuery();
+			
+			List<Checkout> checkouts =new ArrayList();  
+			
+			while(rs.next()) {				
+				Checkout linha = new EstoqueAbrigo();				
+				linha.setId(rs.getInt("numPedido")); 
+	            linha.setCentro(rs.getString("centro")); 
+	            linha.setAbrigo(rs.getString("abrigo"));
+	            linha.setItem(rs.getString("item")); 
+	            linha.setTipo(rs.getString("tipo")); 
+	            linha.setGenero(rs.getString("genero"));
+	            linha.setTamanho(rs.getString("tamanho")); 
+	            linha.setQuantidade(rs.getInt("quantidade")); 				
+							
+				checkouts.add(linha);				
+			}			
+			return checkouts;
+
+		}
+		catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		
+		finally {
+			DB.closeStatement(st);
+		}
+
+	}
+	
 	
 	@Override
 	public void UpdateStatus(Integer id, Boolean status) {
