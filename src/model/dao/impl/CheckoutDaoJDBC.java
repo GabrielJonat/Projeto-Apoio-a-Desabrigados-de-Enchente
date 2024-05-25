@@ -32,7 +32,7 @@ public class CheckoutDaoJDBC implements CheckoutDao{
 		ResultSet rs = null;
 		
 		try {
-			st = conn.prepareStatement("SELECT pedido.id as numPedido, centro.nome as centro, abrigo.nome as abrigo, item.nome as item, item.tipo, item.genero, item.tamanho, itempedido.quantidade"
+			st = conn.prepareStatement("SELECT checkout.id as checkout, pedido.id as numPedido, centro.nome as centro, abrigo.nome as abrigo, item.nome as item, item.tipo, item.genero, item.tamanho, itempedido.quantidade"
 					+ "FROM checkout "
 					+ "INNER JOIN pedido ON checkout.id_pedido = pedido.id"
 					+ "INNER JOIN itempedido ON pedido.id = itempedido.id_pedido"
@@ -46,8 +46,9 @@ public class CheckoutDaoJDBC implements CheckoutDao{
 			List<Checkout> checkouts =new ArrayList();  
 			
 			while(rs.next()) {				
-				Checkout linha = new EstoqueAbrigo();				
-				linha.setId(rs.getInt("numPedido")); 
+				Checkout linha = new EstoqueAbrigo();		
+				linha.setId(rs.getInt("numCheckout")); 
+				linha.setIdPedido(rs.getInt("numPedido")); 
 	            linha.setCentro(rs.getString("centro")); 
 	            linha.setAbrigo(rs.getString("abrigo"));
 	            linha.setItem(rs.getString("item")); 
@@ -67,6 +68,7 @@ public class CheckoutDaoJDBC implements CheckoutDao{
 		
 		finally {
 			DB.closeStatement(st);
+			DB.closeResultSet(rs)
 		}
 
 	}
@@ -80,7 +82,7 @@ public class CheckoutDaoJDBC implements CheckoutDao{
 		try {
 			st = conn.prepareStatement("UPDATE checkout SET status_pedido=? WHERE id=?");
 			
-			st.setInt(1, status);
+			st.setBoolean(1, status);
 			st.setInt(2, id);
 
 			int rowsAffected = st.executeUpdate();

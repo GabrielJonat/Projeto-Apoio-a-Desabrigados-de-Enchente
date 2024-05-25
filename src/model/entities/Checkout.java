@@ -17,7 +17,7 @@ public class Checkout{
     private Character genero;
     private Integer tamanho;
     private Integer quantidade;
-    private String status;
+    private Boolean status;
     private String motivo;
 
 
@@ -25,7 +25,7 @@ public class Checkout{
         super();
     }
 
-    public Checkout(Integer id, Integer idpedido, Integer numPedido, String centro, String abrigo, String item, String tipo, Character genero, Integer tamanho, Integer quantidade, String status, String motivo) {
+    public Checkout(Integer id, Integer idpedido, Integer numPedido, String centro, String abrigo, String item, String tipo, Character genero, Integer tamanho, Integer quantidade, Boolean status, String motivo) {
         this.id = id;
         this.idpedido = idpedido;
         this.numPedido = numPedido;
@@ -120,11 +120,11 @@ public class Checkout{
         this.idpedido = idpedido;
     }
 
-    public String getStatus() {
+    public Boolean getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Boolean status) {
         this.status = status;
     }
 
