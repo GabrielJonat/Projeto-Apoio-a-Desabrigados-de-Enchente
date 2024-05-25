@@ -61,6 +61,40 @@ public class ItemPedidoDaoJDBC implements ItemPedidoDao{
 		}
 
 		@Override
+		public List<ItemPedido> findByPedido(Integer id_Pedido) {
+		    PreparedStatement st = null;
+		    ResultSet rs = null;
+		    try {
+		        st = conn.prepareStatement("SELECT * FROM itemPedido WHERE id_pedido =?");
+		        
+		        st.setInt(1, id_Pedido);
+		        
+		        rs = st.executeQuery();
+
+		        List<ItemPedido> list = new ArrayList<>();
+
+		        while (rs.next()) {
+		            
+		        	ItemPedido obj = new ItemPedido();
+		            obj.setId_pedido(rs.getInt("id_pedido"));
+		            obj.setId_item(rs.getInt("id_item"));
+		            obj.setQuantidade(rs.getInt("quantidade"));
+		    
+		            list.add(obj);
+		        }
+
+		        return list;
+		    } catch (SQLException e) {
+		        throw new DbException(e.getMessage());
+		    } finally {
+		        DB.closeResultSet(rs);
+		        DB.closeStatement(st);
+		    }
+		}
+		
+
+		
+		
 		public List<ItemPedido> findAll() {
 		    PreparedStatement st = null;
 		    ResultSet rs = null;

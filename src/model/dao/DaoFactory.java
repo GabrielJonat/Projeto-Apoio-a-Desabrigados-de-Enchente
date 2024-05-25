@@ -2,6 +2,7 @@ package model.dao;
 
 import db.DB;
 import model.dao.impl.AbrigoDaoJDBC;
+import model.dao.impl.CheckoutDaoJDBC;
 import model.dao.impl.EstoqueAbrigoJDBC;
 import model.dao.impl.EstoqueCentroJDBC;
 import model.dao.impl.ItemPedidoDaoJDBC;
@@ -16,6 +17,11 @@ public class DaoFactory {
 	}
 	
 	public static EstoqueCentroDao createEstoqueCentroDao() {
+		
+		return new EstoqueCentroJDBC(DB.getConnection());
+	}
+	
+	public static EstoqueCentroDao createEstoqueAbrigoDao() {
 		
 		return new EstoqueCentroJDBC(DB.getConnection());
 	}
@@ -38,6 +44,11 @@ public class DaoFactory {
 	public static ItemPedidoDao createItemPedido() {
 		
 		return new ItemPedidoDaoJDBC(DB.getConnection());
+	}
+	
+	public static CheckoutDaoJDBC createCheckOutDao() {
+		
+		return new CheckoutDaoJDBC(DB.getConnection());
 	}
 	
 }

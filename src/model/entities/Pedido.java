@@ -84,5 +84,12 @@ public class Pedido {
 			return false;
 		Pedido other = (Pedido) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	@Override
+	public String toString() {
+		return "Pedido [id=" + id + ", id_abrigo=" + id_abrigo + ", id_centro=" + id_centro +"]";
 	}	
+	
+	
 }

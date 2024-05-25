@@ -139,6 +139,37 @@ public class PedidoDaoJDBC implements PedidoDao{
 		    }
 		}
 
+		public List<Pedido> findByCentro(Integer id) {
+		    
+			PreparedStatement st = null;
+		    ResultSet rs = null;
+		    try {
+		        st = conn.prepareStatement(
+		            "SELECT * FROM pedido p INNER JOIN checkout c ON p.id = c.id_pedido WHERE p.centro_id = ? AND c.status_pedido <> 'Aceito'");
+
+		        st.setInt(1, id);
+		        rs = st.executeQuery();
+
+		        List<Pedido> pedidos = new ArrayList<>();
+		        
+		        while(rs.next()) {
+		            
+		        	Pedido obj = new Pedido();
+		            obj.setId(rs.getInt("id"));
+		            obj.setId_abrigo(rs.getInt("abrigo_id"));
+		            obj.setId_centro(rs.getInt("centro_id"));
+		      
+		            pedidos.add(obj);
+		        }
+		        return pedidos;
+		        
+		    } catch (SQLException e) {
+		        throw new DbException(e.getMessage());
+		    } finally {
+		        DB.closeResultSet(rs);
+		        DB.closeStatement(st);
+		    }
+		}
 
 		@Override
 		public List<Pedido> findAll() {

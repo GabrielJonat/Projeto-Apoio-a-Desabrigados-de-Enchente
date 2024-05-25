@@ -129,7 +129,7 @@ private Connection conn;
 			st = conn.prepareStatement(
 					"SELECT * "
 					+"FROM estoqueCentro "
-					+"WHERE idLote = ? ");
+					+"WHERE idCentro = ? ");
 			
 			st.setInt(1, id);
 			rs = st.executeQuery();

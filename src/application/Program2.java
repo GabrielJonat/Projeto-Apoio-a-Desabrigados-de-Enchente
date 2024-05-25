@@ -10,12 +10,14 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import model.dao.AbrigoDao;
+import model.dao.CheckoutDao;
 import model.dao.DaoFactory;
 import model.dao.EstoqueCentroDao;
 import model.dao.ItemPedidoDao;
 import model.dao.PedidoDao;
 import model.dao.itemDao;
 import model.entities.Abrigo;
+import model.entities.Checkout;
 import model.entities.EstoqueCentro;
 import model.entities.Item;
 import model.entities.ItemPedido;
@@ -37,10 +39,12 @@ public class Program2 {
 		
 	EstoqueCentroDao estoqueCentroDao = DaoFactory.createEstoqueCentroDao();
 	
-	a(sc, abrigoDao, pedidoDao, itemBanco, itemPedidoDao, estoqueCentroDao);
+	CheckoutDao checkoutDao = DaoFactory.createCheckOutDao();
+	
+	a(sc, abrigoDao, pedidoDao, itemBanco, itemPedidoDao, estoqueCentroDao, checkoutDao);
 	
 	}
-	public static void a(Scanner sc, AbrigoDao abrigoDao, PedidoDao pedidoDao, itemDao itemBanco, ItemPedidoDao itemPedidoDao, EstoqueCentroDao estoqueCentroDao) {
+	public static void a(Scanner sc, AbrigoDao abrigoDao, PedidoDao pedidoDao, itemDao itemBanco, ItemPedidoDao itemPedidoDao, EstoqueCentroDao estoqueCentroDao, CheckoutDao checkoutDao) {
 		int escolha = 1;
 		boolean sair = true;
 
@@ -113,7 +117,7 @@ public class Program2 {
 
 				clear();
 				
-				fazerPedido(sc, abrigoDao, pedidoDao, itemBanco, itemPedidoDao, estoqueCentroDao);
+				fazerPedido(sc, abrigoDao, pedidoDao, itemBanco, itemPedidoDao, estoqueCentroDao, checkoutDao);
 				
 				System.out.println("Pedido cadastrado!");
 				
@@ -284,7 +288,7 @@ public class Program2 {
 
 	}
 
-	public static void fazerPedido(Scanner sc, AbrigoDao abrigoDao, PedidoDao pedidoDao, itemDao itemDao, ItemPedidoDao itemPedidoDao, EstoqueCentroDao estoqueCentroDao) {
+	public static void fazerPedido(Scanner sc, AbrigoDao abrigoDao, PedidoDao pedidoDao, itemDao itemDao, ItemPedidoDao itemPedidoDao, EstoqueCentroDao estoqueCentroDao, CheckoutDao checkoutDao) {
 		
 		List<Item> items = itemDao.findAll();
 		
@@ -324,7 +328,7 @@ public class Program2 {
 				
 			listaPedido.add(itemDao.findById(id));
 			
-			System.out.print("Continuar doando?(S/N): ");
+			System.out.print("Adicionar novo item?(S/N): ");
 			
 			String sair = sc.next();
 			
@@ -390,6 +394,8 @@ public class Program2 {
 			itemPedidoDao.insert(new ItemPedido(null, pedidoRes.getId(), listaPedido.get(i).getId(), quantidades.get(i)));
 		
 		}
+		
+		checkoutDao.inserirCheckout(new Checkout(null, newPedido.getId(), "Pendente", null));
 		
 	}
 	public static void clear() {

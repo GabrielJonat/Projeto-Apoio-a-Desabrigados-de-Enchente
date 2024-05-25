@@ -10,5 +10,6 @@ public interface PedidoDao {
 	void update(Integer id, String nome);
 	void deleteById(Integer id);
 	Pedido findById(Integer id);
+	List<Pedido> findByCentro(Integer id);
 	List<Pedido> findAll();
 }
