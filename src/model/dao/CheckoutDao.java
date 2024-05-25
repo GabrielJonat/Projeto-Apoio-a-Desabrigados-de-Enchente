@@ -3,7 +3,7 @@ package model.dao;
 public class CheckoutDao {
 	
 	//buscar lista de pedidos
-	List<Pedido> findPedidosByCentroID(Integer idCheckout); // lista os pedidos baseado no centro escolhido
+	List<Checkout> findPedidosByCentroID(Integer idCheckout); // lista os pedidos baseado no centro escolhido
 	
 	//atualizar tabela de checkout
 	void updateStatus(Integer id, Boolean status); //atualizar tabela de checkout mudando para true ou false
