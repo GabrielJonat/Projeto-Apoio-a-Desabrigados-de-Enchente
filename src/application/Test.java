@@ -118,7 +118,7 @@ public class Test {
 			return;
 		}
 		
-	        System.out.print("\nQual pedido deseja administrar? (s/n): ");
+	        System.out.print("\nQual pedido deseja administrar? ");
 	        
 	        Integer id_pedido = sc.nextInt();
 	     
@@ -136,7 +136,7 @@ public class Test {
 	        
 	        if(answear.toUpperCase().equals("S")) {
 	        	
-	        	checkoutDao.updateStatus(id_pedido, "Aceito");
+	        	checkoutDao.updateStatus(id_pedido, "Aceito", null);
 	        	
 	        	 List<ItemPedido> listaPedido = itemPedidoDao.findByPedido(id_pedido);
 	 	        
@@ -214,7 +214,11 @@ public class Test {
 
 	        else {
 	        	
-	        	checkoutDao.updateStatus(id_pedido, "Negado");
+	        	System.out.print("Informe o motivo da recusa: ");
+	        	
+	        	String motivo = sc.next();
+	        	
+	        	checkoutDao.updateStatus(id_pedido, "Negado", motivo);
 	        	
 	        	System.out.println("\nPedido negado!\n");
 	        }

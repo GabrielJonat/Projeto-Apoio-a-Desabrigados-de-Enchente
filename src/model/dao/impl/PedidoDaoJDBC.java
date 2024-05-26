@@ -145,7 +145,7 @@ public class PedidoDaoJDBC implements PedidoDao{
 		    ResultSet rs = null;
 		    try {
 		        st = conn.prepareStatement(
-		            "SELECT * FROM pedido p INNER JOIN checkout c ON p.id = c.id_pedido WHERE p.centro_id = ? AND c.status_pedido <> 'Aceito'");
+		            "SELECT * FROM pedido p INNER JOIN checkout c ON p.id = c.id_pedido WHERE p.centro_id = ? AND c.status_pedido = 'Pendente'");
 
 		        st.setInt(1, id);
 		        rs = st.executeQuery();

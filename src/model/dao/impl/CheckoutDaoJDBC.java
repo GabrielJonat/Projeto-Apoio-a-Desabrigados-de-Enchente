@@ -125,15 +125,33 @@ public class CheckoutDaoJDBC implements CheckoutDao{
 	
 	
 	@Override
-	public void updateStatus(Integer id, String status) {
+	public void updateStatus(Integer id, String status, String motivo) {
 		
 		PreparedStatement st = null;
 		
 		try {
-			st = conn.prepareStatement("UPDATE checkout SET status_pedido=? WHERE id_pedido=?");
 			
-			st.setString(1, status);
-			st.setInt(2, id);
+			if(status.equals("Aceito")) {
+				
+				st = conn.prepareStatement("UPDATE checkout SET status_pedido=? WHERE id_pedido=?");
+				
+				st.setString(1, status);
+				
+				st.setInt(2, id);
+			
+			}
+			
+			else {
+				
+				st = conn.prepareStatement("UPDATE checkout SET status_pedido=?, motivo=? WHERE id_pedido=?");
+				
+				st.setString(1, status);
+				
+				st.setString(2, motivo);
+				
+				st.setInt(3, id);
+				
+			}
 
 			int rowsAffected = st.executeUpdate();
 			
