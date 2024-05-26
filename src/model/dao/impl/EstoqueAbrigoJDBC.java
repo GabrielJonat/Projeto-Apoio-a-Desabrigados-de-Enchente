@@ -128,7 +128,7 @@ private Connection conn;
 			st = conn.prepareStatement(
 					"SELECT * "
 					+"FROM estoqueAbrigo "
-					+"WHERE idLote = ? ");
+					+"WHERE id_abrigo = ? ");
 			
 			st.setInt(1, id);
 			rs = st.executeQuery();
@@ -137,13 +137,12 @@ private Connection conn;
 			
 			while(rs.next()) {
 				
-				EstoqueAbrigo produto = new EstoqueAbrigo(rs.getInt("idAbrigo"), rs.getInt("idItem"), rs.getInt("quantidade"));
+				EstoqueAbrigo produto = new EstoqueAbrigo(id, rs.getInt("id_item"), rs.getInt("quantidade"));
 				
-				produto.setId(rs.getInt("idLote"));
+				produto.setId(rs.getInt("id_lote"));
 				
 				estoque.add(produto);
 			
-				
 			}
 			
 			return estoque;

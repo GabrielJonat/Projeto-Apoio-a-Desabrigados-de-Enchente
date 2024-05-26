@@ -37,6 +37,8 @@ public class Test {
 	
 	itemDao itemDao = DaoFactory.createItemDao();
 	
+	checkoutDao.clearEstoque();
+	
 	a(sc, checkoutDao, itemPedidoDao, pedidoDao, estoqueCentroDao, itemDao);
 	
 	}

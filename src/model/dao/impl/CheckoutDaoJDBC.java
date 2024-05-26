@@ -190,6 +190,23 @@ public class CheckoutDaoJDBC implements CheckoutDao{
 		}
 	}
 	
+	@Override
+	public void clearEstoque() {
+		
+		PreparedStatement st = null;
+		
+		try {
+			st = conn.prepareStatement("DELETE FROM estoqueCentro WHERE quantidade = 0",
+					Statement.RETURN_GENERATED_KEYS);
+			int rowsAffected = st.executeUpdate();
+			
+		}
+		catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeStatement(st);
+		}
+	}
 	
-
 }

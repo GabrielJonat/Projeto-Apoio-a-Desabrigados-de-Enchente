@@ -12,12 +12,14 @@ import java.util.stream.Collectors;
 import model.dao.AbrigoDao;
 import model.dao.CheckoutDao;
 import model.dao.DaoFactory;
+import model.dao.EstoqueAbrigoDao;
 import model.dao.EstoqueCentroDao;
 import model.dao.ItemPedidoDao;
 import model.dao.PedidoDao;
 import model.dao.itemDao;
 import model.entities.Abrigo;
 import model.entities.Checkout;
+import model.entities.EstoqueAbrigo;
 import model.entities.EstoqueCentro;
 import model.entities.Item;
 import model.entities.ItemPedido;
@@ -41,11 +43,15 @@ public class Program2 {
 	
 	CheckoutDao checkoutDao = DaoFactory.createCheckOutDao();
 	
-	a(sc, abrigoDao, pedidoDao, itemBanco, itemPedidoDao, estoqueCentroDao, checkoutDao);
+	EstoqueAbrigoDao estoqueAbrigoDao = DaoFactory.createEstoqueAbrigoDao();
+	
+	a(sc, abrigoDao, pedidoDao, itemBanco, itemPedidoDao, estoqueCentroDao, checkoutDao, estoqueAbrigoDao);
 	
 	}
-	public static void a(Scanner sc, AbrigoDao abrigoDao, PedidoDao pedidoDao, itemDao itemBanco, ItemPedidoDao itemPedidoDao, EstoqueCentroDao estoqueCentroDao, CheckoutDao checkoutDao) {
+	public static void a(Scanner sc, AbrigoDao abrigoDao, PedidoDao pedidoDao, itemDao itemBanco, ItemPedidoDao itemPedidoDao, EstoqueCentroDao estoqueCentroDao, CheckoutDao checkoutDao, EstoqueAbrigoDao estoqueAbrigoDao) {
+		
 		int escolha = 1;
+		
 		boolean sair = true;
 
 		while (sair) {
@@ -127,16 +133,23 @@ public class Program2 {
 				
 				clear();
 				
-				for (int i = 0; i < 2; i++)
-					sc.nextLine();
+				listarItemsRecebidos(sc, estoqueAbrigoDao);
 
 				break;
+				
+			case 8:
+				
+				clear();
+				
+				for (int i = 0; i < 2; i++)
+					
+					sc.nextLine();
 
 			default:
 				
 				clear();
 				
-				System.out.println("Essa opção não existe, escolha uma entre 1 e 7.\n");					
+				System.out.println("Essa opção não existe, escolha uma entre 1 e 8.\n");					
 				break;
 
 			}
@@ -160,7 +173,8 @@ public class Program2 {
 		System.out.println("|    4 - Atualizar Abrigo       |");
 		System.out.println("|    5 - Deletar Abrigo         |");
 		System.out.println("|    6 - Fazer Pedido           |");
-		System.out.println("|    7 - Voltar                 |");
+		System.out.println("|    7 - Listar Items           |");
+		System.out.println("|    8 - Sair                   |");
 		System.out.println("|                               |");
 		System.out.println("+-------------------------------+");
 		System.out.print("\nDigite sua opção: ");
@@ -399,6 +413,38 @@ public class Program2 {
 		checkoutDao.inserirCheckout(new Checkout(null, newPedido.getId(), "Pendente", null));
 		
 	}
+	
+	public static void listarItemsRecebidos(Scanner sc, EstoqueAbrigoDao estoqueAbrigoDao) {
+		
+		System.out.print("Informe o abrigo para listar os items recebidos: ");
+		
+		Integer id_abrigo = sc.nextInt();
+		
+		List<EstoqueAbrigo> estoque = estoqueAbrigoDao.findById(id_abrigo);
+		
+		if(estoque.isEmpty())
+			
+			System.out.println("\nNão há items recebidos neste abrigo\n");
+		else {
+			
+			System.out.println("\nListando items: \n");
+			
+			
+			for(EstoqueAbrigo lote : estoque) {
+				
+				System.out.println(lote);
+			}
+			
+		}
+		
+		System.out.println();
+		
+		sc.nextLine();
+		
+		sc.nextLine();
+		
+	}
+	
 	public static void clear() {
 	    for (int i = 0; i < 50; i++) {
 	        System.out.println();
