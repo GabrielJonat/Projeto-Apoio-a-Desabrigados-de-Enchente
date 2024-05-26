@@ -21,9 +21,9 @@ public class DaoFactory {
 		return new EstoqueCentroJDBC(DB.getConnection());
 	}
 	
-	public static EstoqueCentroDao createEstoqueAbrigoDao() {
+	public static EstoqueAbrigoDao createEstoqueAbrigoDao() {
 		
-		return new EstoqueCentroJDBC(DB.getConnection());
+		return new EstoqueAbrigoJDBC(DB.getConnection());
 	}
 	
 	public static itemDao createItemDao() {

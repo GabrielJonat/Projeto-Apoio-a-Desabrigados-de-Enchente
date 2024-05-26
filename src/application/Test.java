@@ -1,15 +1,23 @@
 package application;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import model.dao.CheckoutDao;
 import model.dao.DaoFactory;
 import model.dao.EstoqueCentroDao;
 import model.dao.ItemPedidoDao;
 import model.dao.PedidoDao;
+import model.dao.itemDao;
+import model.entities.Checkout;
 import model.entities.EstoqueCentro;
+import model.entities.Item;
 import model.entities.ItemPedido;
 import model.entities.Pedido;
 
@@ -27,10 +35,12 @@ public class Test {
 	
 	EstoqueCentroDao estoqueCentroDao = DaoFactory.createEstoqueCentroDao();
 	
-	a(sc, checkoutDao, itemPedidoDao, pedidoDao, estoqueCentroDao);
+	itemDao itemDao = DaoFactory.createItemDao();
+	
+	a(sc, checkoutDao, itemPedidoDao, pedidoDao, estoqueCentroDao, itemDao);
 	
 	}
-	public static void a(Scanner sc, CheckoutDao checkoutDao, ItemPedidoDao itemPedidoDao, PedidoDao pedidoDao, EstoqueCentroDao estoqueCentroDao) {
+	public static void a(Scanner sc, CheckoutDao checkoutDao, ItemPedidoDao itemPedidoDao, PedidoDao pedidoDao, EstoqueCentroDao estoqueCentroDao, itemDao itemDao) {
 	
 		int escolha = 1;
 		
@@ -50,7 +60,7 @@ public class Test {
 
 				clear();
 
-				listarPedidosPorCentro(sc, checkoutDao, itemPedidoDao, pedidoDao, estoqueCentroDao);
+				listarPedidosPorCentro(sc, checkoutDao, itemPedidoDao, pedidoDao, estoqueCentroDao, itemDao);
 
 				for (int i = 0; i < 2; i++)
 					sc.nextLine();
@@ -84,7 +94,7 @@ public class Test {
 	}
 	
 	
-	public static void listarPedidosPorCentro(Scanner sc, CheckoutDao checkoutDao, ItemPedidoDao itemPedidoDao, PedidoDao pedidoDao, EstoqueCentroDao estoqueCentroDao) {
+	public static void listarPedidosPorCentro(Scanner sc, CheckoutDao checkoutDao, ItemPedidoDao itemPedidoDao, PedidoDao pedidoDao, EstoqueCentroDao estoqueCentroDao, itemDao itemDao) {
 
 		System.out.println("\n=== Escolha o seu Centro de Distribuição pelo número dele =====\n");
 		System.out.println("| 1 - Centro de Distribuição Esperança     |");
@@ -99,49 +109,187 @@ public class Test {
 
 		for (Pedido pedido : pedidos)
 	   
-	        System.out.println(pedido+ "\n");
+	        System.out.println("\n" + pedido );
+		
+		if(pedidos.size() == 0) {
+			
+			System.out.println("Não há pedidos disponíveis para este Centro.");
 	        
-	        System.out.print("Qual pedido deseja aceitar? (s/n): ");
+			return;
+		}
+		
+	        System.out.print("\nQual pedido deseja administrar? (s/n): ");
 	        
 	        Integer id_pedido = sc.nextInt();
+	     
+	        System.out.println("\nItens do pedido selecionado: \n");
 	        
-	        checkoutDao.updateStatus(id_pedido, "Aceito");
+	        List<ItemPedido> itemsPedido = itemPedidoDao.findByPedido(id_pedido);
+	        
+	        for(ItemPedido item : itemsPedido)
 
-	        List<EstoqueCentro> estoqueCentro = estoqueCentroDao.findById(idCentro);
+	        	System.out.println("\n" + item + "\n");
 	        
-	        List<ItemPedido> listaPedido = itemPedidoDao.findByPedido(id_pedido);
+	        System.out.print("\nDeseja aceitar este pedido? (s/n): ");
 	        
-	        	        
-	        for(int i = 0; i < listaPedido.size(); i++) {
+	        String answear = sc.next();
+	        
+	        if(answear.toUpperCase().equals("S")) {
 	        	
-	        	checkoutDao.updateCentro(idCentro, listaPedido.get(i).getId_item(), listaPedido.get(i).getQuantidade());
+	        	checkoutDao.updateStatus(id_pedido, "Aceito");
 	        	
+	        	 List<ItemPedido> listaPedido = itemPedidoDao.findByPedido(id_pedido);
+	 	        
+	        	 List<EstoqueCentro> estoque = estoqueCentroDao.findById(idCentro);
+	        	 
+	        	 List<Integer> idsItems = new ArrayList<>();
+	        	 
+	        	 List<ItemPedido> restantes = new ArrayList<>();
+	        	 
+	        	 int cont = 0;
+	        	 
+	        	 for(EstoqueCentro item : estoque) {
+	        		 
+	        		 idsItems.add(item.getIdtem());
+	        		 
+	        	 }
+	        	 
+	        	 int qntde = listaPedido.size();
+	        	 
+	        	 for(int i = 0; i < qntde; i++) {
+	        		 
+	        		 if(!idsItems.contains(listaPedido.get(i).getId_item())) {
+	        			 
+	        			 restantes.add(listaPedido.get(i));
+	        			 
+	        			 listaPedido.remove(i);
+	        		 }
+	        	 }
+	        	 
+	        	 
+	        	 for(EstoqueCentro item : estoque) {
+	        	
+	        		 try {
+	        		 if(listaPedido.get(cont).getQuantidade() > item.getQuantidade())
+	        			 
+	        			 listaPedido.get(cont).setQuantidade(item.getQuantidade());
+	        		 }
+	        		 catch(RuntimeException e) {
+	        		 
+	        		 	break;}
+	        		 
+	        		cont ++;
+	        	 }
+	        	
+	 	        for(int i = 0; i < listaPedido.size(); i++) {
+	 	        	
+	 	        	checkoutDao.updateCentro(idCentro, listaPedido.get(i).getId_item(), listaPedido.get(i).getQuantidade());
+	 	        	
+	 	        }
+	 	        
+	 	        System.out.println("\nEstoque Atualizado com Sucesso");
+	 	      
+	 	        Pedido pedido = pedidoDao.findById(id_pedido);
+	 	        
+	 	        for(int i = 0; i < listaPedido.size(); i++) {
+	 	        	
+	 	        	checkoutDao.updateAbrigo(pedido.getId_abrigo(), listaPedido.get(i).getId_item(), listaPedido.get(i).getQuantidade());
+	 	        	
+	 	        }
+	 	        
+	 	        System.out.println("\nPedido Aceito!\n");
+		        	 
+	 	        if(restantes.size() > 0) {
+	 	        	
+	 	        	System.out.println("\nAlguns items não foram entregues, um novo pedido será criado para contempla-los!\n");
+	 	        	
+	 	        	Pedido pedidoOrig = pedidoDao.findById(id_pedido);
+	 	        	
+	 	        	Integer id_abrigo = pedidoOrig.getId_abrigo();
+	 	        	
+	 	        	pedirRestante(id_abrigo, restantes, estoqueCentroDao, pedidoDao, itemPedidoDao, checkoutDao, itemDao);
+	 	        	
+	 	        }
 	        }
-	        
-	        System.out.println("Estoque Atualizado com Sucesso");
-	      
-	        /*
-	        if ("s".equalsIgnoreCase(resposta)) {
-	            System.out.println("Pedido aceito.");
-	            
-	            checkoutDao.updateAbrigo(obj.getId_abrigo(), obj.getId_item(), obj.getQuantidade());
-	            checkoutDao.updateCentro(obj.getId_centro(), obj.getId_item(), obj.getQuantidade());
-	            checkoutDao.updateStatus(obj.getId(), true);
-	            break; 
-	            
-	        } else if ("n".equalsIgnoreCase(resposta)) {
-	            System.out.println("Pedido recusado. Verificando o próximo pedido...\n");
-	            checkoutDao.updateStatus(obj.getId(), false);
-	            
-	        } else {
-	            System.out.println("Resposta inválida. Por favor, insira 's' para sim ou 'n' para não.");
-	            i--;
+
+	        else {
+	        	
+	        	checkoutDao.updateStatus(id_pedido, "Negado");
+	        	
+	        	System.out.println("\nPedido negado!\n");
 	        }
-	    }
-*/
-	        System.out.println("Pedido Aceito!");
-	        
-	        
+	               
+	}
+	
+	public static void pedirRestante(Integer id_abrigo, List<ItemPedido> lista, EstoqueCentroDao estoqueCentroDao, PedidoDao pedidoDao, ItemPedidoDao itemPedidoDao, CheckoutDao checkoutDao, itemDao itemDao) {
+		
+		List<EstoqueCentro> estoqueEsperanca = estoqueCentroDao.findById(1);
+		
+		List<EstoqueCentro> estoqueProsperidade = estoqueCentroDao.findById(2);
+		
+		List<EstoqueCentro> estoqueReconstrucao = estoqueCentroDao.findById(3);
+		
+		Map<Integer,Integer> quantidadeEstoque = new HashMap<>();
+		
+		List<Item> listaRestantes = new ArrayList<>();
+		
+		for(int i = 0; i < lista.size(); i++)
+			
+			listaRestantes.add(itemDao.findById(lista.get(i).getId_item()));
+
+		Integer quantidade = 0;
+		
+		for(EstoqueCentro estoqueCentro : estoqueEsperanca)
+			
+			quantidade += estoqueCentro.getQuantidade();
+		
+		quantidadeEstoque.put(1,quantidade);
+		
+		quantidade = 0;
+		
+		for(EstoqueCentro estoqueCentro : estoqueProsperidade)
+			
+			quantidade += estoqueCentro.getQuantidade();
+		
+		quantidadeEstoque.put(2,quantidade);
+		
+		quantidade = 0;
+		
+		for(EstoqueCentro estoqueCentro : estoqueReconstrucao)
+			
+			quantidade += estoqueCentro.getQuantidade();
+		
+		quantidadeEstoque.put(3,quantidade);
+		
+		Map<Integer, Integer> quantidadeOrdenada = quantidadeEstoque.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1, // Merge function (keep existing value)
+                        LinkedHashMap::new // Preserve insertion order
+                )); 
+		
+		Integer firstKey = 1;
+		
+		
+		Iterator<Map.Entry<Integer, Integer>> iterator = quantidadeOrdenada.entrySet().iterator();
+		while(iterator.hasNext()) {
+		    Map.Entry<Integer, Integer> entry = iterator.next();
+		    firstKey = entry.getKey();}
+		
+		Pedido newPedido = new Pedido(null, id_abrigo, firstKey, listaRestantes);
+			
+		Pedido pedidoRes = pedidoDao.insert(newPedido);
+		
+		for(int i = 0;  i < listaRestantes.size() ; i ++) {
+			
+			itemPedidoDao.insert(new ItemPedido(null, pedidoRes.getId(), listaRestantes.get(i).getId(), lista.get(i).getQuantidade()));
+		
+		}
+		
+		checkoutDao.inserirCheckout(new Checkout(null, newPedido.getId(), "Pendente", null));
+
 	}
 	
 	public static void clear() {

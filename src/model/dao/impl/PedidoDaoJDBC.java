@@ -49,6 +49,8 @@ public class PedidoDaoJDBC implements PedidoDao{
 		                return obj;
 		            }
 		            DB.closeResultSet(rs);
+		            
+		            return obj;
 		        } else {
 		            throw new DbException("Erro inesperado! Nenhuma linha foi alterada!");
 		        }
@@ -56,8 +58,8 @@ public class PedidoDaoJDBC implements PedidoDao{
 		        throw new DbException(e.getMessage());
 		    } finally {
 		    	
-		        DB.closeStatement(st);
-		    	return obj;
+		  
+		    	DB.closeStatement(st);
 		    }
 		}
 
@@ -123,10 +125,8 @@ public class PedidoDaoJDBC implements PedidoDao{
 		        if (rs.next()) {
 		            Pedido obj = new Pedido();
 		            obj.setId(rs.getInt("id"));
-		            obj.setId_abrigo(rs.getInt("id_abrigo"));
-		            obj.setId_centro(rs.getInt("id_centro"));
-		            obj.setDataPedido(rs.getDate("dataPedido").toLocalDate());
-		            obj.setDataEntrega(rs.getDate("dataEntrega").toLocalDate());
+		            obj.setId_abrigo(rs.getInt("abrigo_id"));
+		            obj.setId_centro(rs.getInt("centro_id"));
 		      
 		            return obj;
 		        }

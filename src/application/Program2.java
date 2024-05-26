@@ -380,8 +380,9 @@ public class Program2 {
 		
 		Integer firstKey = 1;
 		
+		
 		Iterator<Map.Entry<Integer, Integer>> iterator = quantidadeOrdenada.entrySet().iterator();
-		if (iterator.hasNext()) {
+		while(iterator.hasNext()) {
 		    Map.Entry<Integer, Integer> entry = iterator.next();
 		    firstKey = entry.getKey();}
 		

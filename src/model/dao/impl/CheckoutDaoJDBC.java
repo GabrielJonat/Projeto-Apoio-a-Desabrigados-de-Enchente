@@ -153,11 +153,13 @@ public class CheckoutDaoJDBC implements CheckoutDao{
 		PreparedStatement st = null;
 		
 		try {
-			st = conn.prepareStatement("UPDATE estoqueAbrigo SET quantidade=quantidade+? WHERE id_abrigo=? AND id_item=?");
+			st = conn.prepareStatement("INSERT INTO estoqueAbrigo (id_abrigo, id_item, quantidade) VALUES (?,?,?)",
+					Statement.RETURN_GENERATED_KEYS);
 			
-			st.setInt(1, quantidade);
-			st.setInt(2, idAbrigo);
-			st.setInt(3, idItem);
+			st.setInt(1, idAbrigo);
+			st.setInt(2, idItem);
+			st.setInt(3, quantidade);
+			
 
 			int rowsAffected = st.executeUpdate();
 			
