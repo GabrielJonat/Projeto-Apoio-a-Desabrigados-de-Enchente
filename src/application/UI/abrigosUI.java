@@ -1,258 +1,451 @@
 package application.UI;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
+import application.Programa;
 import model.dao.AbrigoDao;
+import model.dao.CheckoutDao;
 import model.dao.DaoFactory;
+import model.dao.EstoqueAbrigoDao;
+import model.dao.EstoqueCentroDao;
+import model.dao.ItemPedidoDao;
+import model.dao.PedidoDao;
+import model.dao.ItemDao;
 import model.entities.Abrigo;
-import application.*;
+import model.entities.Checkout;
+import model.entities.EstoqueAbrigo;
+import model.entities.EstoqueCentro;
+import model.entities.Item;
+import model.entities.ItemPedido;
+import model.entities.Pedido;
 
-public class abrigosUI {
-	Scanner sc = new Scanner(System.in);
+public class AbrigosUI {
 
-	AbrigoDao abrigoDao = DaoFactory.createSellerDao();
+    public static void a() {
 
-	public static void a(Scanner sc, AbrigoDao abrigoDao) {
-		int escolha = 1;
-		boolean sair = true;
 
-		while (sair) {
+        Scanner sc = new Scanner(System.in);
 
-			clear();
+        AbrigoDao abrigoDao = DaoFactory.createAbrigoDao();
 
-			menu();
+        PedidoDao pedidoDao = DaoFactory.createPedidoDao();
 
-			escolha = sc.nextInt();
+        ItemDao itemDao = DaoFactory.createItemDao();
 
-			switch (escolha) {
+        ItemPedidoDao itemPedidoDao = DaoFactory.createItemPedido();
 
-			case 1:
+        EstoqueCentroDao estoqueCentroDao = DaoFactory.createEstoqueCentroDao();
 
-				clear();
+        CheckoutDao checkoutDao = DaoFactory.createCheckOutDao();
 
-				listarAbrigos(sc, abrigoDao);
+        EstoqueAbrigoDao estoqueAbrigoDao = DaoFactory.createEstoqueAbrigoDao();
 
-				for (int i = 0; i < 2; i++)
-					sc.nextLine();
+        int escolha = 1;
 
-				break;
+        boolean sair = true;
 
-			case 2:
+        while (sair) {
 
-				clear();
+            clear();
 
-				pesquisarAbrigoPorId(sc, abrigoDao);
+            menu();
 
-				for (int i = 0; i < 2; i++)
-					sc.nextLine();
+            escolha = sc.nextInt();
 
-				break;
+            switch (escolha) {
 
-			case 3:
+                case 1:
 
-				clear();
+                    clear();
 
-				adicionarAbrigo(sc, abrigoDao);
+                    listarAbrigos(sc, abrigoDao);
 
-				for (int i = 0; i < 2; i++)
-					sc.nextLine();
+                    for (int i = 0; i < 2; i++)
+                        sc.nextLine();
 
-				break;
+                    break;
 
-			case 4:
+                case 2:
 
-				clear();
+                    clear();
 
-				atualizarAbrigo(sc, abrigoDao, new Abrigo());
+                    pesquisarAbrigoPorId(sc, abrigoDao);
 
-				for (int i = 0; i < 2; i++)
-					sc.nextLine();
+                    for (int i = 0; i < 2; i++)
+                        sc.nextLine();
 
-				break;
+                    break;
 
-			case 5:
+                case 3:
 
-				clear();
+                    clear();
 
-				deletarAbrigo(sc, abrigoDao);
+                    adicionarAbrigo(sc, abrigoDao);
 
-				for (int i = 0; i < 2; i++)
-					sc.nextLine();
+                    for (int i = 0; i < 2; i++)
+                        sc.nextLine();
 
-				break;
+                    break;
 
-			case 6:
+                case 4:
 
-				clear();
+                    clear();
 
-				Programa.main(null);
+                    atualizarAbrigo(sc, abrigoDao, new Abrigo());
 
-				for (int i = 0; i < 2; i++)
-					sc.nextLine();
+                    for (int i = 0; i < 2; i++)
+                        sc.nextLine();
 
-				break;
+                    break;
 
-			default:
-				
-				clear();
-				System.out.println("Essa opção não existe, escolha uma entre 1 e 6.\n");					
-				break;
+                case 5:
 
-			}
-		}
-	}
+                    clear();
 
-	public static void menu() {
+                    deletarAbrigo(sc, abrigoDao);
 
-		System.out.println("+-------------------------------+");
-		System.out.println("|                               |");
-		System.out.println("|            ABRIGOS	        |");
-		System.out.println("|                               |");
-		System.out.println("|           COMPASS.UOL         |");
-		System.out.println("|                               |");
-		System.out.println("|                               |");
-		System.out.println("| Informe a opção desejada:     |");
-		System.out.println("|                               |");
-		System.out.println("|    1 - Listar Abrigos         |");
-		System.out.println("|    2 - Pesquisar Abrigo       |");
-		System.out.println("|    3 - Adicionar Abrigo       |");
-		System.out.println("|    4 - Atualizar Abrigo       |");
-		System.out.println("|    5 - Deletar Abrigo         |");
-		System.out.println("|    6-  Voltar                 |");
-		System.out.println("|                               |");
-		System.out.println("+-------------------------------+");
-		System.out.print("\nDigite sua opção: ");
-	}
+                    for (int i = 0; i < 2; i++)
+                        sc.nextLine();
 
-	public static void adicionarAbrigo(Scanner sc, AbrigoDao abrigoDao) {
+                    break;
 
-		System.out.println("\n=== TEST 3: abrigo insert =====\n");
+                case 6:
 
-		System.out.print("Insira o nome do abrigo: ");
+                    clear();
 
-		String nome = sc.next();
+                    fazerPedido(sc, abrigoDao, pedidoDao, itemDao, itemPedidoDao, estoqueCentroDao, checkoutDao);
 
-		System.out.print("Insira o nome do responsável pelo abrigo: ");
+                    System.out.println("Pedido cadastrado!");
 
-		sc.nextLine();
+                    break;
 
-		String responsavel = sc.nextLine();
+                case 7:
 
-		System.out.print("Insira o email do abrigo: ");
+                    clear();
 
-		String email = sc.next();
+                    listarItemsRecebidos(sc, estoqueAbrigoDao);
 
-		System.out.print("Insira o telefone do abrigo: ");
+                    break;
 
-		String telefone = sc.next();
+                case 8:
 
-		System.out.print("Insira o logradouro do abrigo: ");
+                    clear();
+                    Programa.main(null);
 
-		String logradouro = sc.next();
+                    for (int i = 0; i < 2; i++)
 
-		System.out.print("Insira o numero do logradouro: ");
+                        sc.nextLine();
 
-		sc.nextLine();
+                default:
 
-		Integer numero = sc.nextInt();
+                    clear();
 
-		System.out.print("Insira o numero da ocupação: ");
+                    System.out.println("Essa opção não existe, escolha uma entre 1 e 8.\n");
+                    break;
 
-		Integer numeroOcupacao = sc.nextInt();
+            }
+        }
+    }
 
-		Abrigo newAbrigo = new Abrigo(null, nome, responsavel, logradouro, numero, telefone, email, numeroOcupacao);
+    public static void menu() {
 
-		System.out.println();
+        System.out.println("+-------------------------------+");
+        System.out.println("|                               |");
+        System.out.println("|            ABRIGOS	        |");
+        System.out.println("|                               |");
+        System.out.println("|           COMPASS.UOL         |");
+        System.out.println("|                               |");
+        System.out.println("|                               |");
+        System.out.println("| Informe a opção desejada:     |");
+        System.out.println("|                               |");
+        System.out.println("|    1 - Listar Abrigos         |");
+        System.out.println("|    2 - Pesquisar Abrigo       |");
+        System.out.println("|    3 - Adicionar Abrigo       |");
+        System.out.println("|    4 - Atualizar Abrigo       |");
+        System.out.println("|    5 - Deletar Abrigo         |");
+        System.out.println("|    6 - Fazer Pedido           |");
+        System.out.println("|    7 - Listar Items           |");
+        System.out.println("|    8 - Sair                   |");
+        System.out.println("|                               |");
+        System.out.println("+-------------------------------+");
+        System.out.print("\nDigite sua opção: ");
+    }
 
-		abrigoDao.insert(newAbrigo);
+    public static void adicionarAbrigo(Scanner sc, AbrigoDao abrigoDao) {
 
-		System.out.println("\nNew Abrigo inserted!\n");
+        System.out.println("\n=== TEST 3: abrigo insert =====\n");
 
-	}
+        System.out.print("Insira o nome do abrigo: ");
 
-	public static void pesquisarAbrigoPorId(Scanner sc, AbrigoDao abrigoDao) {
+        String nome = sc.next();
 
-		System.out.println("\n=== TEST 2: abrigo findById =====\n");
+        System.out.print("Insira o nome do responsável pelo abrigo: ");
 
-		System.out.print("Digite o id do abrigo procurado: ");
+        sc.nextLine();
 
-		int id = sc.nextInt();
+        String responsavel = sc.nextLine();
 
-		Abrigo abrigo = abrigoDao.findById(id);
+        System.out.print("Insira o email do abrigo: ");
 
-		System.out.println("\nAbrigo encontrado:\n\n" + abrigo);
+        String email = sc.next();
 
-	}
+        System.out.print("Insira o telefone do abrigo: ");
 
-	public static void listarAbrigos(Scanner sc, AbrigoDao abrigoDao) {
+        String telefone = sc.next();
 
-		clear();
+        System.out.print("Insira o logradouro do abrigo: ");
 
-		System.out.println("\n=== TEST 1: abrigo findAll =====\n");
+        String logradouro = sc.next();
 
-		List<Abrigo> list = abrigoDao.findAll();
+        System.out.print("Insira o numero do logradouro: ");
 
-		for (Abrigo obj : list) {
-			System.out.println(obj + "\n");
-		}
+        sc.nextLine();
 
-	}
+        Integer numero = sc.nextInt();
 
-	public static void atualizarAbrigo(Scanner sc, AbrigoDao abrigoDao, Abrigo abrigo) {
+        Integer numeroOcupacao = 0;
 
-		System.out.println("\n=== TEST 4: abrigo update =====");
+        Abrigo newAbrigo = new Abrigo(null, nome, responsavel, logradouro, numero, telefone, email, numeroOcupacao);
 
-		System.out.print("\nDigite o id do abrigo que deseja atualizar: \n\n");
+        System.out.println();
 
-		int id = sc.nextInt();
+        abrigoDao.insert(newAbrigo);
 
-		abrigo = abrigoDao.findById(id);
+        System.out.println("\nNew Abrigo inserted!\n");
 
-		System.out.println(
-				"\nDigite os dados atualizados do novo abrigo separando os por ponto e virgula nesta ordem: nome, responsável email, telefone logradouro, numero e ocupação\n");
+    }
 
-		sc.nextLine();
+    public static void pesquisarAbrigoPorId(Scanner sc, AbrigoDao abrigoDao) {
 
-		String[] args = sc.nextLine().split(";");
+        System.out.println("\n=== TEST 2: abrigo findById =====\n");
 
-		abrigo.setNome(args[0]);
+        System.out.print("Digite o id do abrigo procurado: ");
 
-		abrigo.setResponsavel(args[1]);
+        int id = sc.nextInt();
 
-		abrigo.setEmail(args[2]);
+        Abrigo abrigo = abrigoDao.findById(id);
 
-		abrigo.setTelefone(args[3]);
+        System.out.println("\nAbrigo encontrado:\n\n" + abrigo);
 
-		abrigo.setLogradouro(args[4]);
+    }
 
-		abrigo.setNumero(Integer.parseInt(args[5]));
+    public static void listarAbrigos(Scanner sc, AbrigoDao abrigoDao) {
 
-		abrigo.setNumOcupacao(Integer.parseInt(args[6]));
+        clear();
 
-		abrigoDao.update(abrigo);
+        System.out.println("\n=== TEST 1: abrigo findAll =====\n");
 
-		System.out.println("\nUpdate completed");
-	}
+        List<Abrigo> list = abrigoDao.findAll();
 
-	public static void deletarAbrigo(Scanner sc, AbrigoDao abrigoDao) {
+        for (Abrigo obj : list) {
+            System.out.println(obj + "\n");
+        }
 
-		System.out.println("\n=== TEST 5: abrigo delete =====\n");
+    }
 
-		System.out.println("Enter id for delete test: \n");
+    public static void atualizarAbrigo(Scanner sc, AbrigoDao abrigoDao, Abrigo abrigo) {
 
-		int id = sc.nextInt();
+        System.out.println("\n=== TEST 4: abrigo update =====");
 
-		abrigoDao.deleteById(id);
+        System.out.print("\nDigite o id do abrigo que deseja atualizar: \n\n");
 
-		System.out.println("\nDelete completed");
+        int id = sc.nextInt();
 
-	}
+        abrigo = abrigoDao.findById(id);
 
-	public static void clear() {
-	    for (int i = 0; i < 50; i++) {
-	        System.out.println();
-	    }
-	}
+        System.out.println(
+                "\nDigite os dados atualizados do novo abrigo separando os por ponto e virgula nesta ordem: nome, responsável email, telefone logradouro, numero e ocupação\n");
 
+        sc.nextLine();
+
+        String[] args = sc.nextLine().split(";");
+
+        abrigo.setNome(args[0]);
+
+        abrigo.setResponsavel(args[1]);
+
+        abrigo.setEmail(args[2]);
+
+        abrigo.setTelefone(args[3]);
+
+        abrigo.setLogradouro(args[4]);
+
+        abrigo.setNumero(Integer.parseInt(args[5]));
+
+        abrigo.setNumOcupacao(Integer.parseInt(args[6]));
+
+        abrigoDao.update(abrigo);
+
+        System.out.println("\nUpdate completed");
+    }
+
+    public static void deletarAbrigo(Scanner sc, AbrigoDao abrigoDao) {
+
+        System.out.println("\n=== TEST 5: abrigo delete =====\n");
+
+        System.out.println("Enter id for delete test: \n");
+
+        int id = sc.nextInt();
+
+        abrigoDao.deleteById(id);
+
+        System.out.println("\nDelete completed");
+
+    }
+
+    public static void fazerPedido(Scanner sc, AbrigoDao abrigoDao, PedidoDao pedidoDao, ItemDao itemDao, ItemPedidoDao itemPedidoDao, EstoqueCentroDao estoqueCentroDao, CheckoutDao checkoutDao) {
+
+        List<Item> items = itemDao.findAll();
+
+        List<Item> listaPedido = new ArrayList<>();
+
+        List<Abrigo> abrigos = abrigoDao.findAll();
+
+        for(Abrigo abrigo : abrigos)
+
+            System.out.println(abrigo);
+
+        System.out.print("\nQual o id do abrigo que fará o pedido?");
+
+        Integer id_abrigo = sc.nextInt();
+
+        for (Item item : items)
+
+            System.out.println(item);
+
+        System.out.println();
+
+        List<Integer> quantidades = new ArrayList<>();
+
+        boolean acabou = false;
+
+        while(!acabou) {
+
+            System.out.println("Digite o id do item que deseja requisitar");
+
+            Integer id = sc.nextInt();
+
+            System.out.println("Digite a quantidade");
+
+            Integer quant = sc.nextInt();
+
+            quantidades.add(quant);
+
+            listaPedido.add(itemDao.findById(id));
+
+            System.out.print("Adicionar novo item?(S/N): ");
+
+            String sair = sc.next();
+
+            acabou = sair.toUpperCase().equals("S") ? false : true;
+
+        }
+
+        List<EstoqueCentro> estoqueEsperanca = estoqueCentroDao.findById(1);
+
+        List<EstoqueCentro> estoqueProsperidade = estoqueCentroDao.findById(2);
+
+        List<EstoqueCentro> estoqueReconstrucao = estoqueCentroDao.findById(3);
+
+        Map<Integer,Integer> quantidadeEstoque = new HashMap<>();
+
+
+        Integer quantidade = 0;
+
+        for(EstoqueCentro estoqueCentro : estoqueEsperanca)
+
+            quantidade += estoqueCentro.getQuantidade();
+
+        quantidadeEstoque.put(1,quantidade);
+
+        quantidade = 0;
+
+        for(EstoqueCentro estoqueCentro : estoqueProsperidade)
+
+            quantidade += estoqueCentro.getQuantidade();
+
+        quantidadeEstoque.put(2,quantidade);
+
+        quantidade = 0;
+
+        for(EstoqueCentro estoqueCentro : estoqueReconstrucao)
+
+            quantidade += estoqueCentro.getQuantidade();
+
+        quantidadeEstoque.put(3,quantidade);
+
+        Map<Integer, Integer> quantidadeOrdenada = quantidadeEstoque.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1, // Merge function (keep existing value)
+                        LinkedHashMap::new // Preserve insertion order
+                ));
+
+        Integer firstKey = 1;
+
+
+        Iterator<Map.Entry<Integer, Integer>> iterator = quantidadeOrdenada.entrySet().iterator();
+        while(iterator.hasNext()) {
+            Map.Entry<Integer, Integer> entry = iterator.next();
+            firstKey = entry.getKey();}
+
+        Pedido newPedido = new Pedido(null, id_abrigo, firstKey, listaPedido);
+
+        Pedido pedidoRes = pedidoDao.insert(newPedido);
+
+        for(int i = 0;  i < listaPedido.size() ; i ++) {
+
+            itemPedidoDao.insert(new ItemPedido(null, pedidoRes.getId(), listaPedido.get(i).getId(), quantidades.get(i)));
+
+        }
+
+        checkoutDao.inserirCheckout(new Checkout(null, newPedido.getId(), "Pendente", null));
+
+    }
+
+    public static void listarItemsRecebidos(Scanner sc, EstoqueAbrigoDao estoqueAbrigoDao) {
+
+        System.out.print("Informe o abrigo para listar os items recebidos: ");
+
+        Integer id_abrigo = sc.nextInt();
+
+        List<EstoqueAbrigo> estoque = estoqueAbrigoDao.findById(id_abrigo);
+
+        if(estoque.isEmpty())
+
+            System.out.println("\nNão há items recebidos neste abrigo\n");
+        else {
+
+            System.out.println("\nListando items: \n");
+
+
+            for(EstoqueAbrigo lote : estoque) {
+
+                System.out.println(lote);
+            }
+
+        }
+
+        System.out.println();
+
+        sc.nextLine();
+
+        sc.nextLine();
+
+    }
+
+    public static void clear() {
+        for (int i = 0; i < 50; i++) {
+            System.out.println();
+        }
+    }
 }

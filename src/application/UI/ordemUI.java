@@ -4,17 +4,16 @@ import java.util.List;
 import java.util.Scanner;
 
 import application.Programa;
-
+import model.dao.CentroDao;
 import model.dao.DaoFactory;
 import model.dao.EstoqueCentroDao;
 import model.dao.ItemDao;
-import model.dao.CentroDao;
-
+import model.dao.ItemDao;
+import model.entities.Centro;
 import model.entities.EstoqueCentro;
 import model.entities.Item;
-import model.entities.Centro;
 
-public class ItemUI {
+public class ordemUI {
     Scanner sc = new Scanner(System.in);
 
     public static void a(Scanner sc) {
@@ -69,7 +68,7 @@ public class ItemUI {
 
         EstoqueCentroDao estoqueCentroDao = DaoFactory.createEstoqueCentroDao();
         CentroDao centroDao = DaoFactory.createCentroDao();
-        ItemDao<?> ItemDao = DaoFactory.createItemDao();
+        ItemDao<?> itemDao = DaoFactory.createItemDao();
 
 
         List<Centro> list = centroDao.findAll();
@@ -116,7 +115,7 @@ public class ItemUI {
 
                     switch(escolhaNome) {
                         case 1:
-                            List<Item> itens = ItemDao.findByType("AGASALHOS");
+                            List<Item> itens = itemDao.findByType("AGASALHOS");
                             for (Item obj : itens) {
                                 System.out.println(obj + "\n");
                             }
@@ -130,7 +129,7 @@ public class ItemUI {
                             break;
 
                         case 2:
-                            List<Item> itens2 = ItemDao.findByType("CAMISAS");
+                            List<Item> itens2 = itemDao.findByType("CAMISAS");
                             for (Item obj : itens2) {
                                 System.out.println(obj + "\n");
                             }
@@ -147,7 +146,7 @@ public class ItemUI {
                     break;
 
                 case 2:
-                    List<Item> itens2 = ItemDao.findByName("PRODUTOS DE HIGIENE");
+                    List<Item> itens2 = itemDao.findByName("PRODUTOS DE HIGIENE");
                     for (Item obj : itens2) {
                         System.out.println(obj + "\n");
                     }
@@ -161,7 +160,7 @@ public class ItemUI {
                     break;
 
                 case 3:
-                    List<Item> itens3 = ItemDao.findByName("ALIMENTOS");
+                    List<Item> itens3 = itemDao.findByName("ALIMENTOS");
                     for (Item obj : itens3) {
                         System.out.println(obj + "\n");
                     }
@@ -203,7 +202,7 @@ public class ItemUI {
 
         System.out.println("+-------------------------------+");
         System.out.println("|                               |");
-        System.out.println("|            Doações	        |");
+        System.out.println("|          FAZER PEDIDO         |");
         System.out.println("|                               |");
         System.out.println("|           COMPASS.UOL         |");
         System.out.println("|                               |");
@@ -222,4 +221,5 @@ public class ItemUI {
             System.out.println();
         }
     }
+
 }
