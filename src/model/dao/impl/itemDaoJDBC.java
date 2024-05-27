@@ -12,6 +12,7 @@ import db.DB;
 import db.DbException;
 import model.dao.itemDao;
 import model.entities.Item;
+import model.exceptions.InvalideIdException;
 
 public class itemDaoJDBC implements itemDao {
 	
@@ -111,6 +112,9 @@ public class itemDaoJDBC implements itemDao {
 		catch(SQLException e) {
 			throw new DbException(e.getMessage());
 		}
+		catch (IllegalArgumentException e) {
+			throw new InvalideIdException("Id informado não foi encontrado");
+		}
 		finally {
 			DB.closeStatement(st);
 		}
@@ -150,6 +154,9 @@ public class itemDaoJDBC implements itemDao {
 		}
 		catch(SQLException e) {
 			throw new DbException(e.getMessage());
+		}
+		catch (IllegalArgumentException e) {
+			throw new InvalideIdException("Id informado não foi encontrado");
 		}
 		finally {
 			

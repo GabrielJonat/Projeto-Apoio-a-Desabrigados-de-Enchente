@@ -13,6 +13,7 @@ import db.DbException;
 import db.DbIntegrityException;
 import model.dao.AbrigoDao;
 import model.entities.Abrigo;
+import model.exceptions.InvalideIdException;
 
 public class AbrigoDaoJDBC implements AbrigoDao {
 
@@ -49,6 +50,9 @@ public class AbrigoDaoJDBC implements AbrigoDao {
 		}
 		catch (SQLException e) {
 			throw new DbException(e.getMessage());
+		}
+		catch (IllegalArgumentException e) {
+			throw new InvalideIdException("Id informado não foi encontrado");
 		}
 		finally {
 			DB.closeStatement(st);
@@ -193,6 +197,9 @@ public class AbrigoDaoJDBC implements AbrigoDao {
 		catch (SQLException e) {
 			throw new DbIntegrityException(e.getMessage());
 		} 
+		catch (IllegalArgumentException e) {
+			throw new InvalideIdException("Id informado não foi encontrado");
+		}
 		finally {
 			DB.closeStatement(st);
 		}

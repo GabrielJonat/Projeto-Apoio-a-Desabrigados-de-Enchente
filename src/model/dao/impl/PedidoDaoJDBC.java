@@ -12,6 +12,7 @@ import db.DB;
 import db.DbException;
 import model.dao.PedidoDao;
 import model.entities.Pedido;
+import model.exceptions.InvalideIdException;
 
 public class PedidoDaoJDBC implements PedidoDao{
 
@@ -103,9 +104,14 @@ public class PedidoDaoJDBC implements PedidoDao{
 		        if (rowsAffected == 0) {
 		            throw new DbException("Erro inesperado! Nenhuma linha foi deletada!");
 		        }
-		    } catch (SQLException e) {
+		    }
+		    catch (SQLException e) {
 		        throw new DbException(e.getMessage());
-		    } finally {
+		    } 
+		    catch (IllegalArgumentException e) {
+				throw new InvalideIdException("Id informado não foi encontrado");
+			}
+		    finally {
 		        DB.closeStatement(st);
 		    }
 		}
@@ -131,9 +137,14 @@ public class PedidoDaoJDBC implements PedidoDao{
 		            return obj;
 		        }
 		        return null; 
-		    } catch (SQLException e) {
+		    } 
+		    catch (SQLException e) {
 		        throw new DbException(e.getMessage());
-		    } finally {
+		    } 
+		    catch (IllegalArgumentException e) {
+				throw new InvalideIdException("Id informado não foi encontrado");
+			}
+		    finally {
 		        DB.closeResultSet(rs);
 		        DB.closeStatement(st);
 		    }
